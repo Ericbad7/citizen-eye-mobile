@@ -13,7 +13,7 @@ class ButtonWidget extends StatelessWidget {
   final double paddingHorizontal;
   final Widget? icon; // Pour ajouter une icône optionnelle
 
-  ButtonWidget({
+  const ButtonWidget({super.key, 
     required this.label,
     required this.onPressed,
     this.color = AppColors.buttonColor,
@@ -46,7 +46,7 @@ class ButtonWidget extends StatelessWidget {
         children: [
           if (icon != null) ...[
             icon!, // Afficher l'icône si elle est fournie
-            SizedBox(width: 8), // Espacement entre l'icône et le texte
+            const SizedBox(width: 8), // Espacement entre l'icône et le texte
           ],
           Text(
             label,

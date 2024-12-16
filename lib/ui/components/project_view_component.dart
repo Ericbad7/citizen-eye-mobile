@@ -1,11 +1,10 @@
-import 'package:citizeneye/data/models/project_model.dart';
-import 'package:citizeneye/ui/widgets/project_card.dart';
-import 'package:citizeneye/ui/widgets/project_view_card.dart';
 import 'package:flutter/material.dart';
 
 class ProjectView extends StatefulWidget {
+  const ProjectView({super.key});
+
   @override
-  _ProjectViewState createState() => _ProjectViewState();
+  State<ProjectView> createState() => _ProjectViewState();
 }
 
 class _ProjectViewState extends State<ProjectView> {
@@ -24,7 +23,7 @@ class _ProjectViewState extends State<ProjectView> {
             children: [
               // Filtre par taille de budget
               DropdownButton<String>(
-                hint: Text("Taille du budget"),
+                hint: const Text("Taille du budget"),
                 value: selectedBudgetFilter,
                 items: ["Gros budget", "Petit budget"].map((String value) {
                   return DropdownMenuItem<String>(
@@ -40,7 +39,7 @@ class _ProjectViewState extends State<ProjectView> {
               ),
               // Filtre par thématique
               DropdownButton<String>(
-                hint: Text("Thématique"),
+                hint: const Text("Thématique"),
                 value: selectedThemeFilter,
                 items: ["Infrastructure", "Environnement", "Éducation"]
                     .map((String value) {
@@ -60,7 +59,7 @@ class _ProjectViewState extends State<ProjectView> {
         ),
 
         // Liste de projets filtrée
-        Expanded(child: Text("")),
+        const Expanded(child: Text("")),
       ],
     );
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SearchBars extends StatefulWidget {
+  const SearchBars({super.key});
+
   @override
-  _SearchBarsState createState() => _SearchBarsState();
+  State<SearchBars> createState() => _SearchBarsState();
 }
 
 class _SearchBarsState extends State<SearchBars> {
@@ -108,7 +110,7 @@ class _SearchBarsState extends State<SearchBars> {
           children: [
             Text(
               title,
-              style: TextStyle(color: Colors.blue), // Text color
+              style: const TextStyle(color: Colors.blue), // Text color
             ),
             // Show clear icon if the filter is selected
             if (isSelected)

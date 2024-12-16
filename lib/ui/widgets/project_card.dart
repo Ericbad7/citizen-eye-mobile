@@ -10,10 +10,10 @@ import '../widgets/badge_widget.dart';
 class ProjectCard extends StatefulWidget {
   final ProjectModel project;
 
-  const ProjectCard({Key? key, required this.project}) : super(key: key);
+  const ProjectCard({super.key, required this.project});
 
   @override
-  _ProjectCardState createState() => _ProjectCardState();
+  State<ProjectCard> createState() => _ProjectCardState();
 }
 
 class _ProjectCardState extends State<ProjectCard> {

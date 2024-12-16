@@ -8,6 +8,7 @@ class PostCard extends StatelessWidget {
   final String timeAgo;
 
   const PostCard({
+    super.key,
     required this.username,
     required this.profileImage,
     required this.postImage,
@@ -18,16 +19,16 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
             leading: CircleAvatar(backgroundImage: profileImage),
-            title:
-                Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(username,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(timeAgo),
-            trailing: Icon(Icons.more_horiz),
+            trailing: const Icon(Icons.more_horiz),
           ),
           Image(image: postImage),
           Padding(
@@ -40,15 +41,15 @@ class PostCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Icons.thumb_up_alt_outlined),
+                  icon: const Icon(Icons.thumb_up_alt_outlined),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(Icons.comment_outlined),
+                  icon: const Icon(Icons.comment_outlined),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(Icons.share_outlined),
+                  icon: const Icon(Icons.share_outlined),
                   onPressed: () {},
                 ),
               ],

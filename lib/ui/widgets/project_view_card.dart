@@ -11,7 +11,7 @@ import 'package:citizeneye/ui/widgets/badge_widget.dart';
 class ProjectViewCard extends StatelessWidget {
   final ProjectModel project;
 
-  const ProjectViewCard({Key? key, required this.project}) : super(key: key);
+  const ProjectViewCard({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +181,7 @@ class ProjectViewCard extends StatelessWidget {
   }
 
   Widget _buildBadges() {
-    return Align(
+    return const Align(
       alignment: Alignment.bottomLeft,
       child: Wrap(
         spacing: 8,
@@ -313,7 +313,7 @@ class ProjectViewCard extends StatelessWidget {
       width: 180,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxHeight: 140, // Limiter la hauteur maximale
         ),
         decoration: BoxDecoration(

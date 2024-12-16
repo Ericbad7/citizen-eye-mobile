@@ -8,11 +8,11 @@ class CommentTile extends StatelessWidget {
   final VoidCallback onReply;
 
   const CommentTile({
-    Key? key,
+    super.key,
     required this.comment,
     required this.onLikeToggle,
     required this.onReply,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CommentTile extends StatelessWidget {
           CircleAvatar(
             backgroundImage: comment.user.avatar != null
                 ? NetworkImage(comment.user.avatar)
-                : AssetImage('assets/images/profile_placeholder.png')
+                : const AssetImage('assets/images/profile_placeholder.png')
                     as ImageProvider,
             backgroundColor: Colors.grey[200],
           ),
@@ -84,7 +84,7 @@ class CommentTile extends StatelessWidget {
                         onPressed: onLikeToggle,
                       ),
                       const SizedBox(width: 4),
-                      Text('${12}'),
+                      const Text('${12}'),
                       const SizedBox(width: 16),
                       TextButton(
                         onPressed: onReply,

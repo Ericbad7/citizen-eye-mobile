@@ -3,7 +3,6 @@
 import 'package:citizeneye/data/models/comment_model.dart';
 import 'package:citizeneye/data/models/project_model.dart';
 import 'package:citizeneye/data/models/user_model.dart';
-import 'package:citizeneye/logic/viewmodels/comment_viewmodel.dart';
 import 'package:citizeneye/ui/components/comment_input_component.dart';
 import 'package:citizeneye/ui/components/comment_tile_component.dart';
 import 'package:citizeneye/ui/components/publication_info_component.dart';
@@ -14,10 +13,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class CommentsScreen extends StatefulWidget {
   final ProjectModel project;
 
-  const CommentsScreen({Key? key, required this.project}) : super(key: key);
+  const CommentsScreen({super.key, required this.project});
 
   @override
-  _CommentsScreenState createState() => _CommentsScreenState();
+  State<CommentsScreen> createState() => _CommentsScreenState();
 }
 
 class _CommentsScreenState extends State<CommentsScreen> {

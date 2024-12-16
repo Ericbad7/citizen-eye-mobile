@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );
@@ -38,8 +38,10 @@ class MyApp extends StatelessWidget {
 }
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -53,10 +55,10 @@ class _SplashScreenState extends State<SplashScreen> {
     final token = await UserLocalStorage.getToken();
     if (token != null) {
       // Si le token est présent, redirigez vers l'écran principal
-      Get.off(() => IndexScreen());
+      Get.off(() => const IndexScreen());
     } else {
       // Sinon, redirigez vers l'écran d'authentification
-      Get.off(() => AuthScreen());
+      Get.off(() => const AuthScreen());
     }
   }
 

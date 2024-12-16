@@ -12,7 +12,8 @@ class InputField extends StatelessWidget {
   final int maxLines;
   final TextInputAction textInputAction;
 
-  InputField({
+  const InputField({
+    super.key,
     required this.label,
     required this.controller,
     this.hintText,

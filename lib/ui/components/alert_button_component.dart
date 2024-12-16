@@ -6,8 +6,7 @@ class AlertButton extends StatelessWidget {
   final String message;
   final VoidCallback? onPressed; // Add the onPressed attribute
 
-  const AlertButton({Key? key, required this.message, this.onPressed})
-      : super(key: key);
+  const AlertButton({super.key, required this.message, this.onPressed});
 
   void _sendAlertEmail(BuildContext context) async {
     final Uri emailUri = Uri(
@@ -35,8 +34,8 @@ class AlertButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.red[100], // Background color
           borderRadius: BorderRadius.circular(12), // Rounded corners
-          boxShadow: [
-            const BoxShadow(
+          boxShadow: const [
+            BoxShadow(
               color: Colors.black26, // Shadow color
               blurRadius: 8, // Shadow blur radius
               offset: Offset(0, 4), // Shadow offset

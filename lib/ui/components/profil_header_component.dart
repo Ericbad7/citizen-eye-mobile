@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ProfileHeader extends StatelessWidget {
   final UserProfile userProfile;
 
-  const ProfileHeader({Key? key, required this.userProfile}) : super(key: key);
+  const ProfileHeader({super.key, required this.userProfile});
 
   @override
   Widget build(BuildContext context) {

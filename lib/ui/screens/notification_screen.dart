@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AlertScreen extends StatefulWidget {
+  const AlertScreen({super.key});
+
   @override
-  _AlertScreenState createState() => _AlertScreenState();
+  State<AlertScreen> createState() => _AlertScreenState();
 }
 
 class _AlertScreenState extends State<AlertScreen> {
@@ -47,10 +49,10 @@ class _AlertScreenState extends State<AlertScreen> {
     }
 
     if (alertViewModel.alerts.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(Icons.info, size: 50, color: Colors.grey),
             SizedBox(height: 10),
             Text(
@@ -116,9 +118,9 @@ class _AlertScreenState extends State<AlertScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTruncatedDetailText(
-              "📄 Description: ${alert.description ?? 'N/A'}"),
-          _buildDetailText("👤 Utilisateur: ${alert.userName ?? 'Inconnu'}"),
-          _buildDetailText("📂 Projet: ${alert.projectName ?? 'Non spécifié'}"),
+              "📄 Description: ${alert.description}"),
+          _buildDetailText("👤 Utilisateur: ${alert.userName}"),
+          _buildDetailText("📂 Projet: ${alert.projectName}"),
         ],
       ),
     );

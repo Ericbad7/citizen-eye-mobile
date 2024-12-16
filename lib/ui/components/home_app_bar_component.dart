@@ -6,10 +6,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onMediaPressed; // Callback for media button
 
   const HomeAppBar({
-    Key? key,
+    super.key,
     required this.onSearchPressed,
     required this.onMediaPressed, // Required for media button
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

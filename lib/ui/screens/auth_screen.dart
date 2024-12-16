@@ -1,6 +1,6 @@
 import 'package:citizeneye/data/datasources/user_api.dart';
 import 'package:citizeneye/data/datasources/user_local_storage.dart';
-import 'package:citizeneye/ui/components/tabButton_component.dart';
+import 'package:citizeneye/ui/components/tab_button_component.dart';
 import 'package:citizeneye/ui/screens/index_screen.dart';
 import 'package:citizeneye/widgets/custom_appbar.dart';
 import 'package:citizeneye/widgets/input_field.dart';
@@ -11,8 +11,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
+
   @override
-  _AuthScreenState createState() => _AuthScreenState();
+  State<AuthScreen>  createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
@@ -29,13 +31,13 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Authentification'),
+      appBar: const CustomAppBar(title: 'Authentification'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 400),
+              constraints: const BoxConstraints(maxWidth: 400),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,7 +211,7 @@ class _AuthScreenState extends State<AuthScreen> {
         // Stocker le token
 
         // Rediriger vers l'écran principal
-        Get.off(() => IndexScreen());
+        Get.off(() => const IndexScreen());
       } catch (error) {
         print(error.toString());
         Get.snackbar("Erreur", error.toString(),
@@ -224,6 +226,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _loginAsGuest() {
     print("Connexion en tant qu'invité");
-    Get.off(() => IndexScreen());
+    Get.off(() => const IndexScreen());
   }
 }

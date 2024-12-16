@@ -5,11 +5,10 @@ import 'dart:io';
 class MediaPicker extends StatefulWidget {
   final Function(File) onMediaSelected;
 
-  const MediaPicker({Key? key, required this.onMediaSelected})
-      : super(key: key);
+  const MediaPicker({super.key, required this.onMediaSelected});
 
   @override
-  _MediaPickerState createState() => _MediaPickerState();
+  State<MediaPicker> createState() => _MediaPickerState();
 }
 
 class _MediaPickerState extends State<MediaPicker> {
@@ -36,11 +35,11 @@ class _MediaPickerState extends State<MediaPicker> {
         Row(
           children: [
             IconButton(
-              icon: Icon(Icons.camera_alt),
+              icon: const Icon(Icons.camera_alt),
               onPressed: () => _pickMedia(ImageSource.camera),
             ),
             IconButton(
-              icon: Icon(Icons.photo),
+              icon: const Icon(Icons.photo),
               onPressed: () => _pickMedia(ImageSource.gallery),
             ),
           ],

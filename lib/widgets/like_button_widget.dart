@@ -7,15 +7,15 @@ class LikeButton extends StatefulWidget {
   final Color likeColor; // Allow dynamic color for the like button
 
   const LikeButton({
-    Key? key,
+    super.key,
     required this.isLiked,
     required this.likeCount,
     required this.onLikeToggle,
     required this.likeColor, // Default color is red
-  }) : super(key: key);
+  });
 
   @override
-  _LikeButtonState createState() => _LikeButtonState();
+  State<LikeButton> createState() => _LikeButtonState();
 }
 
 class _LikeButtonState extends State<LikeButton> {

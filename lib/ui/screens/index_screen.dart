@@ -1,5 +1,3 @@
-import 'package:citizeneye/logic/viewmodels/alert_viewmodel.dart';
-import 'package:citizeneye/data/models/describe_model.dart';
 import 'package:citizeneye/ui/screens/notification_screen.dart';
 import 'package:citizeneye/ui/screens/home_screen.dart';
 import 'package:citizeneye/ui/screens/post_screen.dart';
@@ -9,19 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class IndexScreen extends StatefulWidget {
+  const IndexScreen({super.key});
+
   @override
-  _IndexScreenState createState() => _IndexScreenState();
+  State<IndexScreen> createState() => _IndexScreenState();
 }
 
 class _IndexScreenState extends State<IndexScreen> {
   int _selectedIndex = 0;
 
   static final List<Widget> _pages = <Widget>[
-    HomeScreen(),
-    PostScreen(),
-    ProjectScreen(),
-    AlertScreen(),
-    ProfileScreen(),
+    const HomeScreen(),
+    const PostScreen(),
+    const ProjectScreen(),
+    const AlertScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

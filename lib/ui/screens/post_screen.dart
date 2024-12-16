@@ -8,8 +8,10 @@ import 'package:citizeneye/ui/components/post_field_component.dart';
 import 'dart:io';
 
 class PostScreen extends StatefulWidget {
+  const PostScreen({super.key});
+
   @override
-  _PostScreenState createState() => _PostScreenState();
+  State<PostScreen> createState() => _PostScreenState();
 }
 
 class _PostScreenState extends State<PostScreen> {
@@ -85,8 +87,8 @@ class _PostScreenState extends State<PostScreen> {
                     margin: const EdgeInsets.only(top: 16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        const BoxShadow(
+                      boxShadow: const [
+                        BoxShadow(
                           color: Colors.black26,
                           blurRadius: 8,
                           offset: Offset(0, 4),

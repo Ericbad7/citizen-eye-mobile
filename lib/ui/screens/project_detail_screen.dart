@@ -7,8 +7,7 @@ import '../../utils/constants/app_sizes.dart';
 class ProjectDetailScreen extends StatelessWidget {
   final ProjectModel project;
 
-  const ProjectDetailScreen({Key? key, required this.project})
-      : super(key: key);
+  const ProjectDetailScreen({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
@@ -86,22 +85,22 @@ class ProjectDetailScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton.icon(
-                    icon: Icon(Icons.thumb_up),
-                    label: Text('Like'),
+                    icon: const Icon(Icons.thumb_up),
+                    label: const Text('Like'),
                     onPressed: () {
                       // Fonctionnalité de like
                     },
                   ),
                   ElevatedButton.icon(
-                    icon: Icon(Icons.comment),
-                    label: Text('Comment'),
+                    icon: const Icon(Icons.comment),
+                    label: const Text('Comment'),
                     onPressed: () {
                       // Fonctionnalité de commentaire
                     },
                   ),
                   ElevatedButton.icon(
-                    icon: Icon(Icons.share),
-                    label: Text('Share'),
+                    icon: const Icon(Icons.share),
+                    label: const Text('Share'),
                     onPressed: () {
                       // Fonctionnalité de partage
                     },

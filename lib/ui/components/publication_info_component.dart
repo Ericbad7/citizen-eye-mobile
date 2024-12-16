@@ -6,9 +6,9 @@ class PublicationInfo extends StatelessWidget {
   final ProjectModel project;
 
   const PublicationInfo({
-    Key? key,
+    super.key,
     required this.project,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +18,10 @@ class PublicationInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(project.title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text(project.description,
-              style: TextStyle(fontSize: 16, color: Colors.grey)),
+              style: const TextStyle(fontSize: 16, color: Colors.grey)),
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -33,10 +33,10 @@ class PublicationInfo extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
+          const Row(
             children: [
               Icon(Icons.thumb_up, color: Colors.blueAccent),
-              const SizedBox(width: 5),
+              SizedBox(width: 5),
               Text('likes'),
             ],
           ),

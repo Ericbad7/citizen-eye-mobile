@@ -4,13 +4,14 @@ import 'package:citizeneye/logic/viewmodels/project_viewmodel.dart';
 import 'package:citizeneye/ui/components/project_list_component.dart';
 import 'package:citizeneye/ui/widgets/search_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import '../components/homeAppBar_component.dart';
+import '../components/home_app_bar_component.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -49,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // Show search bar if _isSearchVisible is true
           if (_isSearchVisible)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: SearchBars(),
             ),
           Expanded(

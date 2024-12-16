@@ -17,7 +17,7 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -266,6 +266,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs
         .remove('userId'); // Effacer l'ID utilisateur des SharedPreferences
-    Get.offAll(() => AuthScreen()); // Redirigez vers l'écran de connexion
+    Get.offAll(() => const AuthScreen()); // Redirigez vers l'écran de connexion
   }
 }

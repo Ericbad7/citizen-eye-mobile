@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PostButton extends StatelessWidget {
   final Function onPressed;
 
-  const PostButton({Key? key, required this.onPressed}) : super(key: key);
+  const PostButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +15,9 @@ class PostButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30), // Rounded corners
         ),
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

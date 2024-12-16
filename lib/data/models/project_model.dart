@@ -1,4 +1,3 @@
-import 'package:citizeneye/data/models/comment_model.dart';
 
 class ProjectModel {
   final int id; // Ajouté pour représenter l'ID du projet

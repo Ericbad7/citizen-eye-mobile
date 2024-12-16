@@ -8,15 +8,15 @@ class CommentInput extends StatefulWidget {
   final String profileImageUrl;
 
   const CommentInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onSend,
     required this.onPickImage,
     required this.profileImageUrl,
-  }) : super(key: key);
+  });
 
   @override
-  _CommentInputState createState() => _CommentInputState();
+  State<CommentInput> createState() => _CommentInputState();
 }
 
 class _CommentInputState extends State<CommentInput> {

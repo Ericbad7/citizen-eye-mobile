@@ -1,15 +1,12 @@
-import 'package:citizeneye/data/models/project_model.dart';
-import 'package:citizeneye/ui/components/homeAppBar_component.dart';
+import 'package:citizeneye/ui/components/home_app_bar_component.dart';
 import 'package:citizeneye/ui/widgets/search_bar_widget.dart';
 import 'package:flutter/material.dart';
-import '../components/project_view_component.dart';
-import '../widgets/project_view_card.dart';
 
 class ProjectScreen extends StatefulWidget {
-  ProjectScreen({Key? key}) : super(key: key);
+  const ProjectScreen({super.key});
 
   @override
-  _ProjectScreenState createState() => _ProjectScreenState();
+  State<ProjectScreen> createState() => _ProjectScreenState();
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
@@ -36,11 +33,11 @@ class _ProjectScreenState extends State<ProjectScreen> {
         children: [
           // Afficher la barre de recherche si _isSearchVisible est true
           if (_isSearchVisible)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: SearchBars(),
             ),
-          Expanded(
+          const Expanded(
             child: Text(""),
           ),
         ],

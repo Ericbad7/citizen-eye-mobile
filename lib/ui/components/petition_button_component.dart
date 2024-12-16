@@ -6,8 +6,7 @@ class PetitionButton extends StatelessWidget {
   final VoidCallback? onPressed; // Add the onPressed attribute
 
   const PetitionButton(
-      {Key? key, required this.petitionMessage, this.onPressed})
-      : super(key: key);
+      {super.key, required this.petitionMessage, this.onPressed});
 
   void _publishPetition(BuildContext context) async {
     final Uri petitionUri = Uri(
@@ -43,7 +42,7 @@ class PetitionButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center, // Center the content
           children: [
             Icon(
@@ -51,7 +50,7 @@ class PetitionButton extends StatelessWidget {
               color: Colors.blue,
               size: 30, // Icon size
             ),
-            const SizedBox(height: 8), // Space between icon and text
+            SizedBox(height: 8), // Space between icon and text
             Text(
               "Pétition",
               style: TextStyle(

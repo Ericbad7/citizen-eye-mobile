@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PostInputField extends StatelessWidget {
   final TextEditingController controller;
 
-  const PostInputField({Key? key, required this.controller}) : super(key: key);
+  const PostInputField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class PostInputField extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, // White background for the field
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12, // Subtle shadow
             blurRadius: 5.0,

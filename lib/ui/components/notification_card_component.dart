@@ -4,8 +4,7 @@ import '../../data/models/notification_model.dart';
 class NotificationCard extends StatelessWidget {
   final NotificationModel notification;
 
-  const NotificationCard({Key? key, required this.notification})
-      : super(key: key);
+  const NotificationCard({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +28,16 @@ class NotificationCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(notification.message),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               notification.user?.name ?? "", // Nom de l'utilisateur
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
         ),
         trailing: Text(
           _formatTimestamp(notification.createdAt),
-          style: TextStyle(color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
         ),
         onTap: () {
           // Ajouter une logique pour marquer la notification comme lue ou afficher des détails
