@@ -52,6 +52,12 @@ class UserApi {
           'status': false,
           'message': data['message'],
         };
+      } else if (response.statusCode == 401) {
+        final data = json.decode(response.body);
+        return {
+          'status': false,
+          'message': data['message'],
+        };
       } else {
         return {
           'status': false,
@@ -123,6 +129,12 @@ class UserApi {
           'message': data['message'],
         }; // Retourne l'utilisateur et le token
       } else if (response.statusCode == 400) {
+        final data = json.decode(response.body);
+        return {
+          'status': false,
+          'message': data['message'],
+        };
+      } else if (response.statusCode == 401) {
         final data = json.decode(response.body);
         return {
           'status': false,
