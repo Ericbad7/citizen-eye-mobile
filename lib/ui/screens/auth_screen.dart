@@ -1,5 +1,4 @@
 import 'package:citizeneye/data/datasources/user_api.dart';
-import 'package:citizeneye/data/datasources/user_local_storage.dart';
 import 'package:citizeneye/ui/components/tab_button_component.dart';
 import 'package:citizeneye/ui/screens/index_screen.dart';
 import 'package:citizeneye/widgets/custom_appbar.dart';
@@ -14,7 +13,7 @@ class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen>  createState() => _AuthScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
@@ -195,8 +194,16 @@ class _AuthScreenState extends State<AuthScreen> {
             _emailController.text,
             _passwordController.text,
           );
-          final token = response['token'];
-          await UserLocalStorage.saveToken(token);
+
+          Get.snackbar(
+            response["status"] ? 'Succès' : 'Erreur',
+            response["message"],
+            backgroundColor: response["status"] ? Colors.green : Colors.red,
+            colorText: Colors.white,
+          );
+          if (response["status"]) {
+            Get.off(() => const IndexScreen());
+          }
         } else {
           final response = await _userApi.register(
             _nameController.text,
@@ -204,18 +211,24 @@ class _AuthScreenState extends State<AuthScreen> {
             _passwordController.text,
             _confirmPasswordController.text,
           );
-          final token = response['token'];
-          await UserLocalStorage.saveToken(token);
+
+          Get.snackbar(
+            response["status"] ? 'Succès' : 'Erreur',
+            response["message"],
+            backgroundColor: response["status"] ? Colors.green : Colors.red,
+            colorText: Colors.white,
+          );
+          if (response["status"]) {
+            Get.off(() => const IndexScreen());
+          }
         }
-
-        // Stocker le token
-
-        // Rediriger vers l'écran principal
-        Get.off(() => const IndexScreen());
       } catch (error) {
-        print(error.toString());
-        Get.snackbar("Erreur", error.toString(),
-            backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+          "Erreur",
+          error.toString(),
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       } finally {
         setState(() {
           _isLoading = false;
@@ -225,7 +238,6 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _loginAsGuest() {
-    print("Connexion en tant qu'invité");
     Get.off(() => const IndexScreen());
   }
 }
