@@ -62,7 +62,7 @@ class ProjectViewCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.asset(
-        project.imageUrl,
+        project.imageUrl!,
         height: 150,
         width: double.infinity,
         fit: BoxFit.cover,
@@ -112,10 +112,10 @@ class ProjectViewCard extends StatelessWidget {
           'Zone bénéficiaire: ${project.beneficiaryZone}',
           style: TextStyle(color: Colors.grey[800]),
         ),
-        Text(
-          'Responsable: ${project.projectManager}',
-          style: TextStyle(color: Colors.grey[800]),
-        ),
+        // Text(
+        //   'Responsable: ${project.projectManager}',
+        //   style: TextStyle(color: Colors.grey[800]),
+        // ),
       ],
     );
   }

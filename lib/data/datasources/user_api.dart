@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:citizeneye/data/datasources/string_api.dart';
-import 'package:citizeneye/data/datasources/user_local_storage.dart'; // Importez UserLocalStorage
+import 'package:citizeneye/data/datasources/user_local_storage.dart';
 import 'package:http/http.dart' as http;
 
 class UserApi {
@@ -92,7 +92,7 @@ class UserApi {
     }
   }
 
-// Connexion
+  // Connexion
   Future<Map<String, dynamic>> login(
     String email,
     String password,

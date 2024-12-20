@@ -8,15 +8,20 @@ class BadgeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      margin: const EdgeInsets.only(bottom: 5, right: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
-        text,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        '$text FCFA alloué',
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16.0,
+        ),
       ),
     );
   }

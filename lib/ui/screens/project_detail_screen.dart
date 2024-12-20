@@ -26,7 +26,7 @@ class ProjectDetailScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
-                  project.imageUrl,
+                  project.imageUrl!,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -62,19 +62,19 @@ class ProjectDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               // Maître d'ouvrage
               _buildSectionTitle('Maître d\'ouvrage'),
-              GestureDetector(
-                child: Text(
-                  project.projectManager,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-                onTap: () {
-                  _showProjectOwnerDetails(context, project.beneficiaryZone);
-                },
-              ),
+              // GestureDetector(
+              //   child: Text(
+              //     project.projectManager,
+              //     style: const TextStyle(
+              //       fontSize: 16,
+              //       color: Colors.blue,
+              //       decoration: TextDecoration.underline,
+              //     ),
+              //   ),
+              //   onTap: () {
+              //     _showProjectOwnerDetails(context, project.beneficiaryZone);
+              //   },
+              // ),
               const SizedBox(height: 16),
               // Description
               _buildSectionTitle('Description'),

@@ -4,7 +4,7 @@ class Describe {
   final String mediaUrl; // URL of the media (image/video)
   final String description; // Description of the post
   final DateTime timestamp; // Time when the post was created
-  final int likes; // Number of likes on the post
+  final int reactions; // Number of reactions on the post
   final int comments; // Number of comments on the post
 
   Describe({
@@ -13,7 +13,7 @@ class Describe {
     required this.mediaUrl,
     required this.description,
     required this.timestamp,
-    this.likes = 0,
+    this.reactions = 0,
     this.comments = 0,
   });
 
@@ -25,7 +25,7 @@ class Describe {
       'mediaUrl': mediaUrl,
       'description': description,
       'timestamp': timestamp.toIso8601String(),
-      'likes': likes,
+      'reactions': reactions,
       'comments': comments,
     };
   }
@@ -38,7 +38,7 @@ class Describe {
       mediaUrl: map['mediaUrl'],
       description: map['description'],
       timestamp: DateTime.parse(map['timestamp']),
-      likes: map['likes'] ?? 0,
+      reactions: map['reactions'] ?? 0,
       comments: map['comments'] ?? 0,
     );
   }

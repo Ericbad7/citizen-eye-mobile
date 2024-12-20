@@ -12,12 +12,10 @@ class ProjectList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      // If data is loading
       if (viewModel.isLoading.value) {
         return const Center(child: LoadingScreen());
       }
 
-      // If there is an error message
       if (viewModel.errorMessage.value.isNotEmpty) {
         return Center(
           child: Column(
@@ -30,40 +28,36 @@ class ProjectList extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () =>
-                    viewModel.fetchProjects(), // Retry fetching projects
-                child: const Text('Réessayer'),
+                onPressed: () => viewModel.fetchProjects(),
+                child: const Text('Rafraichir'),
               ),
             ],
           ),
         );
       }
 
-      // If no projects are available
       if (viewModel.projects.isEmpty) {
         return const Center(
           child: Text(
-            "Aucun projet disponible.",
+            "Aucun projet en vue.",
             style: TextStyle(fontSize: 16),
           ),
         );
       }
 
-      // If projects are available, display the list
       return RefreshIndicator(
         onRefresh: _onRefresh,
         child: ListView.builder(
           itemCount: viewModel.projects.length,
           itemBuilder: (context, index) {
             final project = viewModel.projects[index];
-            return ProjectCard(project: project); // Display project card
+            return ProjectCard(project: project);
           },
         ),
       );
     });
   }
 
-  // Refresh projects when pulled down
   Future<void> _onRefresh() async {
     await viewModel.fetchProjects();
   }

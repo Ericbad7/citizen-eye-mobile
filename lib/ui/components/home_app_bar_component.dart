@@ -3,12 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onSearchPressed;
-  final VoidCallback onMediaPressed; // Callback for media button
 
   const HomeAppBar({
     super.key,
     required this.onSearchPressed,
-    required this.onMediaPressed, // Required for media button
   });
 
   @override
@@ -20,29 +18,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'CitizenEye',
+            'Citizen Eye',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.grey[200],
-                child: IconButton(
-                  icon: const Icon(FontAwesomeIcons.magnifyingGlass,
-                      color: Colors.black),
-                  onPressed: onSearchPressed,
-                ),
-              ),
-              const SizedBox(width: 16), // Spacing between buttons
-              CircleAvatar(
-                backgroundColor: Colors.grey[200],
-                child: IconButton(
-                  icon: const Icon(FontAwesomeIcons.upload,
-                      color: Colors.black), // Icon for media upload
-                  onPressed: onMediaPressed, // Handle media upload action
-                ),
-              ),
-            ],
+          CircleAvatar(
+            backgroundColor: Colors.grey[200],
+            child: IconButton(
+              icon: const Icon(FontAwesomeIcons.magnifyingGlass,
+                  color: Colors.black),
+              onPressed: onSearchPressed,
+            ),
           ),
         ],
       ),

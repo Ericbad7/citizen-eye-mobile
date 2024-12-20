@@ -18,20 +18,14 @@ class _ProjectScreenState extends State<ProjectScreen> {
     });
   }
 
-  void _uploadMedia() {
-    // Logic to handle media upload (e.g., open image/video picker)
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HomeAppBar(
         onSearchPressed: _toggleSearchBar,
-        onMediaPressed: _uploadMedia,
       ),
       body: Column(
         children: [
-          // Afficher la barre de recherche si _isSearchVisible est true
           if (_isSearchVisible)
             const Padding(
               padding: EdgeInsets.all(16.0),

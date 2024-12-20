@@ -1,11 +1,15 @@
+import 'package:citizeneye/data/datasources/string_api.dart';
+import 'package:citizeneye/data/datasources/user_local_storage.dart';
+import 'package:citizeneye/data/models/project_model.dart';
+import 'package:citizeneye/data/models/reaction_model.dart';
+import 'package:citizeneye/logic/services/project_service.dart';
+import 'package:citizeneye/ui/screens/auth_screen.dart';
+import 'package:citizeneye/ui/screens/comment_screen.dart';
+import 'package:citizeneye/ui/widgets/badge_widget.dart';
+import 'package:citizeneye/utils/helpers/date_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../data/datasources/user_local_storage.dart';
-import '../../data/models/project_model.dart';
-import '../../logic/viewmodels/like_viewmodel.dart';
-import '../screens/comment_screen.dart';
-import '../widgets/badge_widget.dart';
+import 'package:get/get.dart';
 
 class ProjectCard extends StatefulWidget {
   final ProjectModel project;
@@ -17,75 +21,63 @@ class ProjectCard extends StatefulWidget {
 }
 
 class _ProjectCardState extends State<ProjectCard> {
-  late bool isLiked;
-  late int likeCount;
-  bool isProcessing = false; // Empêche les doubles clics
+  bool isProcessing = false;
+  String? _id;
+  ProjectModel? _projectModel;
 
   @override
   void initState() {
     super.initState();
-    likeCount = widget.project.likes.length;
-    isLiked = false;
-    _loadLikeStatus();
+    initId();
+    initProject();
   }
 
-  void _loadLikeStatus() async {
-    String? userId = await UserLocalStorage.getId();
-    if (userId == null) {
-      return;
-    }
+  initProject() {
+    _projectModel = widget.project;
+  }
 
-    try {
-      bool existingLike = await LikeViewModel.checkExistingLike(
-        int.parse(userId),
-        widget.project.id,
-      );
-
-      if (mounted) {
-        setState(() {
-          isLiked = existingLike;
-        });
-      }
-    } catch (e) {
-      debugPrint("Erreur lors du chargement du statut de like : $e");
+  initId() async {
+    final id = await UserLocalStorage.getId();
+    if (id != null) {
+      setState(() {
+        _id = id;
+      });
     }
   }
 
-  Future<void> _toggleLike() async {
-    if (isProcessing) return;
-
-    final userId = await UserLocalStorage.getId();
-    if (userId == null) {
-      debugPrint("Aucun utilisateur connecté. Action ignorée.");
-      return;
+  void _react(String reactionType) async {
+    if (_id == null) {
+      Get.off(() => const AuthScreen());
     }
 
-    final previousLikeState = isLiked;
-    final previousLikeCount = likeCount;
+    final result = await reactToProject(
+      id: _projectModel!.id,
+      reactionType: reactionType,
+    );
 
-    setState(() {
-      isProcessing = true;
-      isLiked = !isLiked;
-      likeCount += isLiked ? 1 : -1;
-    });
-
-    try {
-      await LikeViewModel.toggleLike(
-        int.parse(userId),
-        widget.project.id,
-        commentId: null,
-        emojiType: "applause",
+    if (result['status']) {
+      setState(() {
+        _projectModel!
+            .updateOrAddReaction(ReactionModel.fromJson(result['reaction']));
+      });
+    } else {
+      Get.snackbar(
+        'Erreur',
+        'Impossible de réagir à ce post',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
-    } catch (e) {
-      debugPrint("Erreur lors du toggleLike : $e");
-      setState(() {
-        isLiked = previousLikeState;
-        likeCount = previousLikeCount;
-      });
-    } finally {
-      setState(() {
-        isProcessing = false;
-      });
+    }
+  }
+
+  Color _getTimeColor(DateTime endDate) {
+    final remainingDays = endDate.difference(DateTime.now()).inDays;
+    if (remainingDays > 50) {
+      return Colors.green;
+    } else if (remainingDays > 20) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
     }
   }
 
@@ -100,15 +92,17 @@ class _ProjectCardState extends State<ProjectCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImage(height: 140),
+            _buildHeader(),
+            const SizedBox(height: 10),
+            _buildImage(height: 250),
             const SizedBox(height: 10),
             Text(
-              widget.project.title,
+              _projectModel!.title,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
             Text(
-              widget.project.description,
+              _projectModel!.description,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: Colors.grey[600], fontSize: 14),
@@ -130,11 +124,56 @@ class _ProjectCardState extends State<ProjectCard> {
     );
   }
 
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Expanded(
+          child: ListTile(
+            leading: CircleAvatar(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.network(
+                  '$imagePath/${_projectModel!.imageUrl!}',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image_not_supported),
+                    );
+                  },
+                ),
+              ),
+            ),
+            title: Text(
+              _projectModel!.owner.toUpperCase(),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              "Publié ${formatDate(_projectModel!.createdAt)}",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.solidBell,
+            color: Colors.blueGrey,
+          ),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
   Widget _buildImage({double height = 150}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        widget.project.imageUrl,
+        '$imagePath/${_projectModel!.imageUrl!}',
         height: height,
         width: double.infinity,
         fit: BoxFit.cover,
@@ -143,17 +182,6 @@ class _ProjectCardState extends State<ProjectCard> {
             height: height,
             color: Colors.grey[300],
             child: const Center(child: Text('Image non disponible')),
-          );
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      (loadingProgress.expectedTotalBytes ?? 1)
-                  : null,
-            ),
           );
         },
       ),
@@ -169,51 +197,78 @@ class _ProjectCardState extends State<ProjectCard> {
             IconButton(
               icon: Icon(
                 FontAwesomeIcons.solidHeart,
-                color: isLiked ? Colors.red : Colors.grey,
+                color: (_projectModel!.hasReaction(_id ?? '') &&
+                        _projectModel!.getReactionType(_id ?? '') == 'liked')
+                    ? Colors.blue
+                    : Colors.grey,
               ),
-              onPressed: isProcessing ? null : _toggleLike,
+              onPressed: () {
+                _react('liked');
+              },
             ),
-            Text('$likeCount'),
+            Text('${_projectModel!.getLikeCount()}'),
             const SizedBox(width: 16),
             IconButton(
-              icon: const Icon(FontAwesomeIcons.comment, color: Colors.blue),
+              icon: Icon(
+                FontAwesomeIcons.heartCrack,
+                color: (_projectModel!.hasReaction(_id ?? '') &&
+                        _projectModel!.getReactionType(_id ?? '') == 'disliked')
+                    ? Colors.blue
+                    : Colors.grey,
+              ),
+              onPressed: () {
+                _react('disliked');
+              },
+            ),
+            Text('${_projectModel!.getDislikeCount()}'),
+            const SizedBox(width: 16),
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.solidCommentDots,
+                color: Colors.blue,
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        CommentsScreen(project: widget.project),
+                        CommentsScreen(project: _projectModel!),
                   ),
                 );
               },
             ),
-            Text('${widget.project.comments.length}'),
+            Text('${_projectModel!.getCommentCount()}'),
           ],
         ),
-        IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.triangleExclamation,
-            color: Colors.red,
-          ),
-          onPressed: () {},
-        ),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.peopleRobbery,
+                color: Colors.red,
+              ),
+              onPressed: () {},
+            ),
+            Text('${_projectModel!.petitions.length}'),
+          ],
+        )
       ],
     );
   }
 
+  Widget _buildBadges() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10.0,
+      ),
+      child: BadgeWidget(
+        text: '${_projectModel!.budget}',
+        color: Colors.blueGrey.shade300,
+      ),
+    );
+  }
+
   Widget _buildCircularProgress({double size = 80}) {
-    final totalDuration =
-        widget.project.endDate.difference(widget.project.startDate).inDays;
-    final elapsedDuration =
-        DateTime.now().difference(widget.project.startDate).inDays;
-    final remainingDuration = totalDuration > 0
-        ? (totalDuration - elapsedDuration).clamp(0, totalDuration)
-        : 0;
-
-    final progress = totalDuration > 0
-        ? (elapsedDuration / totalDuration).clamp(0.0, 1.0)
-        : 0.0;
-
     return Column(
       children: [
         Stack(
@@ -223,15 +278,17 @@ class _ProjectCardState extends State<ProjectCard> {
               height: size,
               width: size,
               child: CircularProgressIndicator(
-                value: progress,
+                value: _projectModel!
+                        .calculateProjectDuration()['percentagePassed'] /
+                    100,
                 strokeWidth: 6,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    _getTimeColor(widget.project.endDate)),
+                    _getTimeColor(_projectModel!.endDate)),
                 backgroundColor: Colors.grey[300],
               ),
             ),
             Text(
-              '${(progress * 100).toInt()}%',
+              '${(_projectModel!.calculateProjectDuration()['percentagePassed']).toInt()}%',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
@@ -241,39 +298,10 @@ class _ProjectCardState extends State<ProjectCard> {
         ),
         const SizedBox(height: 8),
         Text(
-          '$remainingDuration j restants',
+          '${_projectModel!.calculateProjectDuration()['daysRemaining']} j restants',
           style: TextStyle(fontSize: 12, color: Colors.grey[600]),
         ),
       ],
     );
-  }
-
-  Widget _buildBadges() {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        if (widget.project.budget != null && widget.project.budget > 247289.20)
-          const BadgeWidget(text: 'Gros Budget', color: Colors.green),
-        if (_isCriticalDeadline())
-          const BadgeWidget(text: 'Délai Critique', color: Colors.red),
-      ],
-    );
-  }
-
-  bool _isCriticalDeadline() {
-    return widget.project.endDate
-        .isBefore(DateTime.now().add(const Duration(days: 50)));
-  }
-
-  Color _getTimeColor(DateTime endDate) {
-    final remainingDays = endDate.difference(DateTime.now()).inDays;
-    if (remainingDays > 50) {
-      return Colors.green;
-    } else if (remainingDays > 20) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
   }
 }

@@ -1,85 +1,147 @@
+import 'package:citizeneye/data/models/reaction_model.dart';
 
 class ProjectModel {
-  final int id; // Ajouté pour représenter l'ID du projet
+  final int id;
   final String title;
   final String description;
-  final String imageUrl;
-  final String goal; // Objectif du projet
-  final String beneficiaryZone; // Zone bénéficiaire
-  final DateTime startDate; // Date de début
-  final DateTime endDate; // Date de fin
-  final double budget; // Budget du projet
-  final String projectManager; // Gestionnaire du projet
-  final String owner; // Propriétaire du projet
-  final String contractor; // Entrepreneur du projet
-  final String status; // Statut du projet
-  final List<dynamic>
-      funds; // Liste des fonds (vous pouvez créer un modèle si nécessaire)
-  final List<dynamic> comments; // Liste des commentaires
-  final List<dynamic> likes; // Liste des commentaires
+  final String? imageUrl;
+  final String goal;
+  final String beneficiaryZone;
+  final DateTime startDate;
+  final DateTime endDate;
+  final double budget;
+  final String owner;
+  final String contractor;
+  final String status;
+  final List<dynamic> funds;
+  final List<dynamic> comments;
+  final List<ReactionModel> reactions;
+  final List<dynamic> petitions;
+  final DateTime createdAt;
 
-  ProjectModel(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.imageUrl,
-      required this.goal,
-      required this.beneficiaryZone,
-      required this.startDate,
-      required this.endDate,
-      required this.budget,
-      required this.projectManager,
-      required this.owner,
-      required this.contractor,
-      required this.status,
-      this.funds = const [],
-      this.comments = const [],
-      this.likes = const []});
+  ProjectModel({
+    required this.id,
+    required this.title,
+    required this.description,
+    this.imageUrl,
+    required this.goal,
+    required this.beneficiaryZone,
+    required this.startDate,
+    required this.endDate,
+    required this.budget,
+    required this.owner,
+    required this.contractor,
+    required this.status,
+    this.funds = const [],
+    this.comments = const [],
+    this.reactions = const [],
+    this.petitions = const [],
+    required this.createdAt,
+  });
 
-  factory ProjectModel.fromJson(Map<String, dynamic> json) {
-    return ProjectModel(
-      id: json['id'], // Assurez-vous de récupérer l'ID
-      title: json['title'],
-      description: json['description'],
-      imageUrl: json['image'],
-      goal: json['objective'], // Correspond au champ JSON
-      beneficiaryZone: json['zone'], // Correspond au champ JSON
-      startDate: DateTime.parse(json['start_date']), // Date de début
-      endDate: DateTime.parse(json['end_date']), // Date de fin
-      budget: double.tryParse(json['budget']) ?? 0.0, // Conversion du budget
-      projectManager: json['owner'], // Gestionnaire du projet
-      owner: json['owner'], // Propriétaire du projet
-      contractor: json['contractor'], // Entrepreneur
-      status: json['status'], // Statut
-      funds: json['funds'], // Liste des fonds
-      comments: json['comments'], // Liste des commentaires
-      likes: json['likes'], // Liste des commentaires
-    );
-  }
+  Map<String, dynamic> calculateProjectDuration() {
+    final totalDuration = endDate.difference(startDate).inDays;
 
-  Map<String, dynamic> toJson() {
+    final currentDate = DateTime.now();
+    int daysPassed = 0;
+
+    if (currentDate.isAfter(startDate)) {
+      daysPassed = currentDate.difference(startDate).inDays;
+    }
+    if (daysPassed > totalDuration) {
+      daysPassed = totalDuration;
+    }
+
+    final daysRemaining = totalDuration - daysPassed;
+
+    final percentagePassed = (daysPassed / totalDuration) * 100;
+
     return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'image': imageUrl,
-      'objective': goal,
-      'zone': beneficiaryZone,
-      'start_date': startDate.toIso8601String(),
-      'end_date': endDate.toIso8601String(),
-      'budget': budget.toString(), // Convertir en chaîne pour l'API
-      'owner': owner,
-      'contractor': contractor,
-      'status': status,
-      'funds': funds,
-      'comments': comments,
-      'likes': likes
+      'percentagePassed': percentagePassed,
+      'daysRemaining': daysRemaining,
     };
   }
 
-  // Méthode pour obtenir le total des fonds
+  void updateOrAddReaction(ReactionModel newReaction) {
+    final index = reactions
+        .indexWhere((reaction) => reaction.userId == newReaction.userId);
+
+    if (index != -1) {
+      reactions[index] = newReaction;
+    } else {
+      reactions.add(newReaction);
+    }
+  }
+
+  int getCommentCount() {
+    return comments.length;
+  }
+
+  int getLikeCount() {
+    return reactions
+        .where((reaction) =>
+            reaction.emojiType == 'liked' && reaction.activated == true)
+        .length;
+  }
+
+  int getDislikeCount() {
+    return reactions
+        .where((reaction) =>
+            reaction.emojiType == 'disliked' && reaction.activated == true)
+        .length;
+  }
+
+  int getPetitionCount() {
+    return petitions.length;
+  }
+
+  bool hasReaction(String userId) {
+    return reactions.any(
+        (reaction) => reaction.userId == userId && reaction.activated == true);
+  }
+
+  String? getReactionType(String userId) {
+    final reaction = reactions.firstWhere(
+      (reaction) => (reaction.userId == userId && reaction.activated == true),
+      orElse: () => ReactionModel(
+        emojiType: '',
+        userId: '',
+        activated: false,
+      ),
+    );
+    return reaction.emojiType.isNotEmpty ? reaction.emojiType : null;
+  }
+
+  /// Conversion depuis un objet JSON
+  factory ProjectModel.fromJson(Map<String, dynamic> json) {
+    return ProjectModel(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      imageUrl: json['image'] != null && (json['image'] as List).isNotEmpty
+          ? (json['image'][0]['path'] as String)
+          : null,
+      goal: json['objective'] as String,
+      beneficiaryZone: json['zone'] as String,
+      startDate: DateTime.parse(json['start_date']),
+      endDate: DateTime.parse(json['end_date']),
+      budget: double.tryParse(json['budget'].toString()) ?? 0.0,
+      owner: json['owner'] as String,
+      contractor: json['contractor'] as String,
+      status: json['status'] as String,
+      funds: json['funds'] ?? [],
+      comments: json['comments'] ?? [],
+      reactions: (json['reactions'] as List<dynamic>? ?? [])
+          .map((reaction) => ReactionModel.fromJson(reaction))
+          .toList(),
+      petitions: json['petitions'] ?? [],
+      createdAt: DateTime.parse(json['created_at']),
+    );
+  }
+
+  /// Méthode pour calculer le total des fonds
   double getTotalFunds() {
-    // Implémentez la logique de calcul ici si nécessaire
-    return 0.0; // Placeholder, implémentez selon vos besoins
+    return funds.fold<double>(
+        0.0, (total, fund) => total + (fund['amount'] ?? 0.0));
   }
 }

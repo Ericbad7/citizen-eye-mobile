@@ -18,7 +18,8 @@ class PublicationInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(project.title,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text(project.description,
               style: const TextStyle(fontSize: 16, color: Colors.grey)),
@@ -26,7 +27,7 @@ class PublicationInfo extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(
-              project.imageUrl,
+              project.imageUrl!,
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -37,7 +38,7 @@ class PublicationInfo extends StatelessWidget {
             children: [
               Icon(Icons.thumb_up, color: Colors.blueAccent),
               SizedBox(width: 5),
-              Text('likes'),
+              Text('reactions'),
             ],
           ),
         ],
