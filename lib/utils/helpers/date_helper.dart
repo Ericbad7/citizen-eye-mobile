@@ -54,3 +54,28 @@ class DateHelper {
     return DateFormat('MMMM', 'fr_FR').format(date);
   }
 }
+
+
+String formatDate(DateTime? date) {
+  if (date == null) return '';
+
+  final now = DateTime.now();
+  final difference = now.difference(date);
+  final hour = date.hour.toString().padLeft(2, '0');
+  final minute = date.minute.toString().padLeft(2, '0');
+  final today = DateTime(now.year, now.month, now.day);
+  final yesterday = today.subtract(Duration(days: 1));
+  final formattedDate = DateTime(date.year, date.month, date.day);
+
+  if (difference.inMinutes < 1) {
+    return 'À l\'instant';
+  } else if (difference.inMinutes < 60) {
+    return 'Il y a ${difference.inMinutes} minutes';
+  } else if (formattedDate == today) {
+    return 'Aujourd\'hui à ${hour}h $minute';
+  } else if (formattedDate == yesterday) {
+    return 'Hier à ${hour}h $minute';
+  } else {
+    return 'le ${DateFormat('dd MMMM yyyy', 'fr').format(date)}';
+  }
+}

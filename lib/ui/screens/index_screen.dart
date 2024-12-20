@@ -1,8 +1,6 @@
-import 'package:citizeneye/ui/screens/notification_screen.dart';
 import 'package:citizeneye/ui/screens/home_screen.dart';
 import 'package:citizeneye/ui/screens/post_screen.dart';
 import 'package:citizeneye/ui/screens/profile_screen.dart';
-import 'package:citizeneye/ui/screens/project_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -19,8 +17,6 @@ class _IndexScreenState extends State<IndexScreen> {
   static final List<Widget> _pages = <Widget>[
     const HomeScreen(),
     const PostScreen(),
-    const ProjectScreen(),
-    const AlertScreen(),
     const ProfileScreen(),
   ];
 
@@ -40,30 +36,21 @@ class _IndexScreenState extends State<IndexScreen> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.house), // Icône Accueil
+            icon: Icon(FontAwesomeIcons.house),
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.feather), // Icône Accueil
-            label: 'Publication',
+            icon: Icon(FontAwesomeIcons.peopleRobbery),
+            label: 'Pétitions',
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.clipboardList), // Icône Projets
-            label: 'Projets',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.bell), // Icône Alertes
-            label: 'Alertes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.user), // Icône Profil
-            label: 'Profil',
+            icon: Icon(FontAwesomeIcons.user),
+            label: 'Compte',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[800], // Couleur de l'élément sélectionné
-        unselectedItemColor:
-            Colors.black87, // Couleur des éléments non sélectionnés
+        selectedItemColor: Colors.blue[800],
+        unselectedItemColor: Colors.black87,
         onTap: _onItemTapped,
       ),
     );

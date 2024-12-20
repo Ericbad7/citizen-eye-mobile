@@ -7,22 +7,22 @@ class LikeRepository {
 
   LikeRepository({required this.baseUrl});
 
-  /// Récupère tous les likes
+  /// Récupère tous les reactions
   Future<List<Map<String, dynamic>>> getAllLikes() async {
-    final response = await http.get(Uri.parse('$baseUrl/likes'));
-    print("getlikes:${response.statusCode}");
+    final response = await http.get(Uri.parse('$baseUrl/reactions'));
+    print("getreactions:${response.statusCode}");
     if (response.statusCode == 200) {
-      final List<dynamic> likes = json.decode(response.body);
-      return likes.map((like) => like as Map<String, dynamic>).toList();
+      final List<dynamic> reactions = json.decode(response.body);
+      return reactions.map((like) => like as Map<String, dynamic>).toList();
     } else {
-      throw Exception('Failed to load likes');
+      throw Exception('Failed to load reactions');
     }
   }
 
   /// Ajoute un nouveau like
   Future<Map<String, dynamic>> addLike(Map<String, dynamic> likeData) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/likes'),
+      Uri.parse('$baseUrl/reactions'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(likeData),
     );
@@ -37,7 +37,7 @@ class LikeRepository {
 
   /// Récupère un like spécifique par ID
   Future<Map<String, dynamic>> getLikeById(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/likes/count/$id'));
+    final response = await http.get(Uri.parse('$baseUrl/reactions/count/$id'));
 
     if (response.statusCode == 200) {
       print("reponselikeby:${response.body}");
@@ -54,7 +54,7 @@ class LikeRepository {
     final likeData = {'user_id': userId, 'item_id': itemId};
 
     final response = await http.post(
-      Uri.parse('$baseUrl/likes'),
+      Uri.parse('$baseUrl/reactions'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(likeData),
     );
@@ -69,7 +69,7 @@ class LikeRepository {
   /// Annule un like
   Future<void> unlikeItem(int userId, int itemId) async {
     final response = await http.delete(
-      Uri.parse('$baseUrl/likes'),
+      Uri.parse('$baseUrl/reactions'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'user_id': userId, 'item_id': itemId}),
     );
@@ -85,7 +85,7 @@ class LikeRepository {
 
   /// Supprime un like par ID
   Future<void> deleteLike(int id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/likes/$id'));
+    final response = await http.delete(Uri.parse('$baseUrl/reactions/$id'));
 
     if (response.statusCode == 204) {
       return;
@@ -96,9 +96,10 @@ class LikeRepository {
     }
   }
 
-  /// Récupère le nombre de likes pour un item donné
+  /// Récupère le nombre de reactions pour un item donné
   Future<int> getLikeCount(int itemId) async {
-    final response = await http.get(Uri.parse('$baseUrl/likes/count/$itemId'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/reactions/count/$itemId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
@@ -113,7 +114,7 @@ class LikeRepository {
       {int? commentId}) async {
     try {
       // Construction de l'URL de l'API avec les paramètres userId et projectId
-      String url = '$baseUrl/likes/check/$userId/$projectId';
+      String url = '$baseUrl/reactions/check/$userId/$projectId';
 
       // Ajouter le comment_id dans l'URL si il est présent
       if (commentId != null) {
