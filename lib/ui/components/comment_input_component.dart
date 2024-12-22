@@ -1,5 +1,8 @@
+import 'package:citizeneye/data/datasources/user_local_storage.dart';
+import 'package:citizeneye/ui/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class CommentInput extends StatefulWidget {
   final TextEditingController controller;
@@ -22,10 +25,22 @@ class CommentInput extends StatefulWidget {
 class _CommentInputState extends State<CommentInput> {
   bool _isCommentEmpty = true;
 
+  String? _id;
+
   @override
   void initState() {
     super.initState();
+    initId();
     widget.controller.addListener(_checkIfCommentIsEmpty);
+  }
+
+  initId() async {
+    final id = await UserLocalStorage.getId();
+    if (id != null) {
+      setState(() {
+        _id = id;
+      });
+    }
   }
 
   @override
@@ -43,9 +58,17 @@ class _CommentInputState extends State<CommentInput> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // Ajout d'un GestureDetector
       onTap: () {
-        FocusScope.of(context).unfocus(); // Ferme le clavier si tap sur le vide
+        if (_id == null) {
+          Get.snackbar(
+            'Info',
+            'Connectez-vous pour réagir à ce post',
+          );
+          Get.to(() => const AuthScreen());
+          return;
+        } else {
+          FocusScope.of(context).unfocus();
+        }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
@@ -58,6 +81,7 @@ class _CommentInputState extends State<CommentInput> {
             const SizedBox(width: 10),
             Expanded(
               child: TextField(
+                readOnly: _id == null ? true : false,
                 controller: widget.controller,
                 decoration: InputDecoration(
                   hintText: 'Écrivez un commentaire...',
@@ -69,9 +93,7 @@ class _CommentInputState extends State<CommentInput> {
                   fillColor: Colors.grey[200],
                   contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                 ),
-                maxLines: 1, // Limite le nombre de lignes à 1
-                // Vous pouvez ajouter une logique ici pour gérer le
-                // défilement si l'utilisateur écrit beaucoup de texte
+                maxLines: 1,
               ),
             ),
             const SizedBox(width: 8),

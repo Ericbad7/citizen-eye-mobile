@@ -13,7 +13,11 @@ class ReactionModel {
     return ReactionModel(
       emojiType: json['emoji_type'] as String,
       userId: json['user_id'].toString(),
-      activated: json['activated'] == 1 ? true : false,
+      activated: json['activated'] == 1
+          ? true
+          : json['activated'] == true
+              ? true
+              : false,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:citizeneye/data/models/comment_model.dart';
 import 'package:citizeneye/data/models/reaction_model.dart';
 
 class ProjectModel {
@@ -14,7 +15,7 @@ class ProjectModel {
   final String contractor;
   final String status;
   final List<dynamic> funds;
-  final List<dynamic> comments;
+  final List<Comment> comments;
   final List<ReactionModel> reactions;
   final List<dynamic> petitions;
   final DateTime createdAt;
@@ -70,6 +71,16 @@ class ProjectModel {
       reactions[index] = newReaction;
     } else {
       reactions.add(newReaction);
+    }
+  }
+
+  void updateOrAddComment(Comment newComment) {
+    final index = comments.indexWhere((comment) => comment.id == newComment.id);
+
+    if (index != -1) {
+      comments[index] = newComment;
+    } else {
+      comments.add(newComment);
     }
   }
 
@@ -130,7 +141,9 @@ class ProjectModel {
       contractor: json['contractor'] as String,
       status: json['status'] as String,
       funds: json['funds'] ?? [],
-      comments: json['comments'] ?? [],
+      comments: (json['comments'] as List<dynamic>? ?? [])
+          .map((comment) => Comment.fromJson(comment))
+          .toList(),
       reactions: (json['reactions'] as List<dynamic>? ?? [])
           .map((reaction) => ReactionModel.fromJson(reaction))
           .toList(),

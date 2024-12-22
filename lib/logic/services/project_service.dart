@@ -73,3 +73,63 @@ Future<Map<String, dynamic>> reactToProject(
     };
   }
 }
+
+Future<Map<String, dynamic>> commentProject({
+  required int id,
+  required String content,
+  File? media,
+}) async {
+  try {
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$projectsUrl/$id/comment'))
+          ..headers['Authorization'] =
+              'Bearer ${await UserLocalStorage.getToken()}'
+          ..fields['content'] = content;
+
+    if (media != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'media',
+        media.path,
+      ));
+    }
+
+    var response = await request.send();
+
+    final responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 201) {
+      final data = json.decode(responseBody);
+      return {
+        'status': true,
+        'message': data['message'],
+        'comment': data['comment'],
+      };
+    } else {
+      final data = json.decode(responseBody);
+      return {
+        'status': false,
+        'message': data['message'] ?? 'Erreur lors de l\'ajout du commentaire.',
+      };
+    }
+  } on SocketException {
+    return {
+      'status': false,
+      'message': 'Aucune connexion Internet. Veuillez réessayer.',
+    };
+  } on TimeoutException {
+    return {
+      'status': false,
+      'message': 'Le délai d\'attente a été dépassé.',
+    };
+  } on FormatException {
+    return {
+      'status': false,
+      'message': 'Format de réponse non valide.',
+    };
+  } catch (e) {
+    return {
+      'status': false,
+      'message': 'Une erreur inattendue s\'est produite : $e',
+    };
+  }
+}

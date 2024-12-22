@@ -4,38 +4,37 @@ import 'user_model.dart';
 class Comment {
   final int id;
   final String content;
-  final String? image;
-  final String? video;
+  final String? media;
+  final String? mediaType;
   final int userId;
   final int projectId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final UserModel user; // Ajouter une propriété User
+  final UserModel user;
 
   Comment({
     required this.id,
     required this.content,
-    this.image,
-    this.video,
+    this.media,
+    this.mediaType,
     required this.userId,
     required this.projectId,
     required this.createdAt,
     required this.updatedAt,
-    required this.user, // Initialiser l'objet User
+    required this.user,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
       id: json['id'],
       content: json['content'],
-      image: json['image'],
-      video: json['video'],
+      media: json['image'],
+      mediaType: json['video'],
       userId: json['user_id'],
-      projectId: json['project_id'],
+      projectId: int.parse(json['related_id'].toString()),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
-      user: UserModel.fromJson(
-          json['user']), // Créer un User à partir des données JSON
+      user: UserModel.fromJson(json['user']),
     );
   }
 }

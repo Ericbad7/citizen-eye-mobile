@@ -47,7 +47,12 @@ class _ProjectCardState extends State<ProjectCard> {
 
   void _react(String reactionType) async {
     if (_id == null) {
-      Get.off(() => const AuthScreen());
+      Get.snackbar(
+        'Info',
+        'Connectez-vous pour réagir à ce post',
+      );
+      Get.to(() => const AuthScreen());
+      return;
     }
 
     final result = await reactToProject(
@@ -68,6 +73,22 @@ class _ProjectCardState extends State<ProjectCard> {
         colorText: Colors.white,
       );
     }
+  }
+
+  void _openBottomSheet(BuildContext context, ProjectModel project) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.85,
+          child: CommentsScreen(project: project),
+        );
+      },
+    );
   }
 
   Color _getTimeColor(DateTime endDate) {
@@ -225,16 +246,10 @@ class _ProjectCardState extends State<ProjectCard> {
             IconButton(
               icon: const Icon(
                 FontAwesomeIcons.solidCommentDots,
-                color: Colors.blue,
+                color: Colors.blueGrey,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        CommentsScreen(project: _projectModel!),
-                  ),
-                );
+                _openBottomSheet(context, _projectModel!);
               },
             ),
             Text('${_projectModel!.getCommentCount()}'),

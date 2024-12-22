@@ -1,9 +1,7 @@
 import 'package:citizeneye/data/models/project_model.dart';
-import 'package:citizeneye/ui/screens/comment_screen.dart';
 import 'package:citizeneye/ui/screens/project_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 
 import 'package:citizeneye/ui/widgets/badge_widget.dart';
@@ -150,7 +148,7 @@ class ProjectViewCard extends StatelessWidget {
               icon: FontAwesomeIcons.comment,
               color: Colors.blueAccent,
               onPressed: () {
-                Get.to(() => CommentsScreen(project: project));
+                // Get.to(() => CommentsScreen(project: project));
               },
             ),
             _buildIconButton(

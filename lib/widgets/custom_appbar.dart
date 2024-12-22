@@ -13,24 +13,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.centerTitle = true,
-    this.backgroundColor = AppColors.primaryColor, // Option 1
-    // backgroundColor = Colors.blue[800]!,  // Assert that the color is not null
+    this.backgroundColor = AppColors.primaryColor,
     this.elevation = 4.0,
     this.actions,
-    this.showBackButton = false, // Par défaut, on ne montre pas le bouton back
+    this.showBackButton = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading:
-          false, // Ne pas afficher le bouton "back" automatiquement
+      automaticallyImplyLeading: false,
       backgroundColor: backgroundColor,
       elevation: elevation,
       centerTitle: centerTitle,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(20), // Coins arrondis au bas de l'AppBar
+          bottom: Radius.circular(20),
         ),
       ),
       title: Text(
@@ -45,10 +43,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
-                Navigator.of(context).pop(); // Retour à l'écran précédent
+                Navigator.of(context).pop();
               },
             )
-          : null, // Si `showBackButton` est faux, pas de bouton
+          : null,
       actions: actions,
     );
   }

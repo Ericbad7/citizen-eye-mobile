@@ -8,7 +8,7 @@ class NotificationModel {
   final int userId;
   final bool hidden;
   final DateTime createdAt;
-  final UserModel? user; // Changez ici pour utiliser la classe User
+  final UserModel? user;
 
   NotificationModel({
     required this.id,
@@ -18,7 +18,7 @@ class NotificationModel {
     required this.userId,
     required this.hidden,
     required this.createdAt,
-    this.user, // Mettez à jour ici
+    this.user,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
