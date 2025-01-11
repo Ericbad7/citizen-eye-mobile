@@ -1,8 +1,8 @@
+import 'package:citizeneye/data/datasources/string_api.dart';
 import 'package:citizeneye/data/models/project_model.dart';
 import 'package:citizeneye/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/constants/app_sizes.dart';
+import 'package:intl/intl.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
   final ProjectModel project;
@@ -22,65 +22,62 @@ class ProjectDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image du projet
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  project.imageUrl!,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Titre du projet
+              _buildImage(height: 200),
+              
               Center(
                 child: Text(
                   project.title,
                   style: const TextStyle(
-                      fontSize: AppSizes.textSizeExtraLarge,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               // Objectif du projet
               _buildSectionTitle('Objectif'),
-              Text(project.goal, style: const TextStyle(fontSize: 16)),
-              const SizedBox(height: 16),
-              // Zone bénéficiaire
+              Text(project.goal),
+              const SizedBox(height: 8),
               _buildSectionTitle('Zone Bénéficiaire'),
-              Text(project.beneficiaryZone,
-                  style: const TextStyle(fontSize: 16)),
-              const SizedBox(height: 16),
-              // Calendrier
+              Text(project.beneficiaryZone),
+              const SizedBox(height: 8),
               _buildSectionTitle('Calendrier'),
-              Text("${project.endDate}", style: const TextStyle(fontSize: 16)),
-              const SizedBox(height: 16),
-              // Budget
+              Text(
+                "Du ${DateFormat('dd MMMM yyyy', 'fr').format(project.startDate)} au ${DateFormat('dd MMMM yyyy', 'fr').format(project.endDate)}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
               _buildSectionTitle('Budget'),
-              Text("${project.budget}", style: const TextStyle(fontSize: 16)),
-              const SizedBox(height: 16),
-              // Maître d'ouvrage
+              Text(
+                "${project.budget}",
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 8),
               _buildSectionTitle('Maître d\'ouvrage'),
-              // GestureDetector(
-              //   child: Text(
-              //     project.projectManager,
-              //     style: const TextStyle(
-              //       fontSize: 16,
-              //       color: Colors.blue,
-              //       decoration: TextDecoration.underline,
-              //     ),
-              //   ),
-              //   onTap: () {
-              //     _showProjectOwnerDetails(context, project.beneficiaryZone);
-              //   },
-              // ),
-              const SizedBox(height: 16),
-              // Description
+              GestureDetector(
+                child: Text(
+                  project.owner,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                onTap: () {
+                  // _showProjectOwnerDetails(context, project.beneficiaryZone);
+                },
+              ),
+              const SizedBox(height: 8),
               _buildSectionTitle('Description'),
-              Text(project.description, style: const TextStyle(fontSize: 16)),
-              const SizedBox(height: 16),
-              // Boutons d'interaction
+              Text(
+                project.description,
+                style: const TextStyle(),
+              ),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -114,34 +111,52 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildImage({double height = 150}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(0),
+      child: Image.network(
+        '$imagePath/${project.imageUrl!}',
+        height: height,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey[300],
+            child: const Icon(Icons.image_not_supported),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: AppSizes.textSizeLarge,
+        fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.blueAccent,
       ),
     );
   }
 
-  void _showProjectOwnerDetails(BuildContext context, String ownerDetails) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Détails du Maître d\'ouvrage'),
-          content: Text(ownerDetails),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Fermer'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showProjectOwnerDetails(BuildContext context, String ownerDetails) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Détails du Maître d\'ouvrage'),
+  //         content: Text(ownerDetails),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Close the dialog
+  //             },
+  //             child: const Text('Fermer'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

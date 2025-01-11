@@ -3,10 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onSearchPressed;
-
+  final Icon? icon;
   const HomeAppBar({
     super.key,
     required this.onSearchPressed,
+    this.icon,
   });
 
   @override
@@ -24,7 +25,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           CircleAvatar(
             backgroundColor: Colors.grey[200],
             child: IconButton(
-              icon: const Icon(FontAwesomeIcons.magnifyingGlass,
+              icon: icon ?? const Icon(FontAwesomeIcons.magnifyingGlass,
                   color: Colors.black),
               onPressed: onSearchPressed,
             ),

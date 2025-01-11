@@ -11,6 +11,8 @@ analyzer:
   errors:
     unnecessary_null_comparison: ignore
     dead_code: ignore
+    use_build_context_synchronously: ignore
+    deprecated_member_use: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

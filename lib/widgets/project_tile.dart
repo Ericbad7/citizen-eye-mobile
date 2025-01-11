@@ -44,9 +44,8 @@ class ProjectTile extends StatelessWidget {
                 fontSize: 14,
                 color: Colors.grey[700],
               ),
-              maxLines: 2, // Limite à 2 lignes pour la description
-              overflow: TextOverflow
-                  .ellipsis, // Si le texte est trop long, ajoute "..."
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 10),
 

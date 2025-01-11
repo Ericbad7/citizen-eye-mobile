@@ -5,6 +5,7 @@ import 'package:citizeneye/data/models/reaction_model.dart';
 import 'package:citizeneye/logic/services/project_service.dart';
 import 'package:citizeneye/ui/screens/auth_screen.dart';
 import 'package:citizeneye/ui/screens/comment_screen.dart';
+import 'package:citizeneye/ui/screens/petition_view.dart';
 import 'package:citizeneye/ui/widgets/badge_widget.dart';
 import 'package:citizeneye/utils/helpers/date_helper.dart';
 import 'package:flutter/material.dart';
@@ -259,10 +260,14 @@ class _ProjectCardState extends State<ProjectCard> {
           children: [
             IconButton(
               icon: const Icon(
-                FontAwesomeIcons.peopleRobbery,
+                FontAwesomeIcons.newspaper,
                 color: Colors.red,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Get.to(PetitionView(
+                  project: _projectModel!,
+                ));
+              },
             ),
             Text('${_projectModel!.petitions.length}'),
           ],

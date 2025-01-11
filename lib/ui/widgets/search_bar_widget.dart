@@ -10,7 +10,7 @@ class SearchBars extends StatefulWidget {
 class _SearchBarsState extends State<SearchBars> {
   final TextEditingController _searchController = TextEditingController();
   bool _isTyping = false;
-  List<String> _selectedFilters = []; // List to store selected filters
+  final List<String> _selectedFilters = []; // List to store selected filters
 
   @override
   Widget build(BuildContext context) {

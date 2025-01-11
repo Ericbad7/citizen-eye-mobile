@@ -1,11 +1,9 @@
-import 'package:citizeneye/data/datasources/string_api.dart'; // Assurez-vous que ce fichier existe et est correct
-import 'package:citizeneye/data/repositories/project_repository.dart';
-import 'package:citizeneye/logic/viewmodels/project_viewmodel.dart';
+import 'package:citizeneye/logic/controllers/project_view_controller.dart';
+import 'package:citizeneye/ui/components/home_app_bar_component.dart';
 import 'package:citizeneye/ui/components/project_list_component.dart';
 import 'package:citizeneye/ui/widgets/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../components/home_app_bar_component.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isSearchVisible = false;
 
-  late final ProjectViewModel projectViewModel;
+  late final ProjectViewController projectViewController;
 
   void _toggleSearchBar() {
     setState(() {
@@ -28,9 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    projectViewModel = Get.put(ProjectViewModel(
-        projectRepository: ProjectRepository("$baseUrl/reactions")));
-    projectViewModel.fetchProjects();
+    projectViewController = Get.put(
+      ProjectViewController(),
+    );
   }
 
   @override
@@ -47,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: SearchBars(),
             ),
           Expanded(
-            child: ProjectList(viewModel: projectViewModel),
+            child: ProjectList(viewModel: projectViewController),
           ),
         ],
       ),

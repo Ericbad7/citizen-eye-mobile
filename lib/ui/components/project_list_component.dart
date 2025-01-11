@@ -1,11 +1,11 @@
+import 'package:citizeneye/logic/controllers/project_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:citizeneye/ui/widgets/project_card.dart';
 import 'package:citizeneye/widgets/loading_spinner.dart';
 import 'package:get/get.dart';
-import '../../logic/viewmodels/project_viewmodel.dart';
 
 class ProjectList extends StatelessWidget {
-  final ProjectViewModel viewModel;
+  final ProjectViewController viewModel;
 
   const ProjectList({super.key, required this.viewModel});
 
@@ -50,7 +50,7 @@ class ProjectList extends StatelessWidget {
         child: ListView.builder(
           itemCount: viewModel.projects.length,
           itemBuilder: (context, index) {
-            final project = viewModel.projects[index];
+            final project = viewModel.projects.reversed.toList()[index];
             return ProjectCard(project: project);
           },
         ),

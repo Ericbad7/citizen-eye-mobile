@@ -6,7 +6,6 @@ class Comment {
   final String content;
   final String? media;
   final String? mediaType;
-  final int userId;
   final int projectId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -17,7 +16,6 @@ class Comment {
     required this.content,
     this.media,
     this.mediaType,
-    required this.userId,
     required this.projectId,
     required this.createdAt,
     required this.updatedAt,
@@ -30,7 +28,6 @@ class Comment {
       content: json['content'],
       media: json['image'],
       mediaType: json['video'],
-      userId: json['user_id'],
       projectId: int.parse(json['related_id'].toString()),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),

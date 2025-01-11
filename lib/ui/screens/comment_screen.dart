@@ -79,22 +79,19 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           );
                         },
                       ),
+                      const SizedBox(height: 150.0)
                     ],
                   ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: BottomAppBar(
-              color: Colors.white,
-              child: CommentInput(
-                controller: _commentController,
-                onSend: () => _addComment(
-                  _commentController.text,
-                  _projectModel!.id,
-                ),
-                onPickImage: () {},
-                profileImageUrl: 'https://via.placeholder.com/100x100.png',
+            child: CommentInput(
+              controller: _commentController,
+              onSend: () => _addComment(
+                _commentController.text,
+                _projectModel!.id,
               ),
+              profileImageUrl: 'https://via.placeholder.com/100x100.png',
             ),
           ),
         ],

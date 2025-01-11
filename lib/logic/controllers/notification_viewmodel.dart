@@ -52,7 +52,9 @@ class NotificationViewModel extends GetxController {
     try {
       final response = await http.post(Uri.parse('$baseUrl/mark-all-as-read'));
       if (response.statusCode == 200) {
-        notifications.forEach((notification) => notification.read = true);
+        for (var notification in notifications) {
+          notification.read = true;
+        }
         notifications.refresh();
       } else {
         throw Exception('Failed to mark all as read');

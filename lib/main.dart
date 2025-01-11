@@ -1,10 +1,3 @@
-import 'package:citizeneye/data/datasources/string_api.dart';
-import 'package:citizeneye/data/repositories/alert_repository.dart';
-import 'package:citizeneye/data/repositories/comment_repository.dart';
-import 'package:citizeneye/data/repositories/project_repository.dart';
-import 'package:citizeneye/logic/viewmodels/alert_viewmodel.dart';
-import 'package:citizeneye/logic/viewmodels/comment_viewmodel.dart';
-import 'package:citizeneye/logic/viewmodels/project_viewmodel.dart';
 import 'package:citizeneye/ui/screens/auth_screen.dart';
 import 'package:citizeneye/ui/screens/index_screen.dart';
 import 'package:citizeneye/widgets/loading_spinner.dart';
@@ -17,15 +10,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('fr_FR', null);
   runApp(const MyApp());
-  // Créez une instance de votre ProjectRepository
-  final projectRepository = ProjectRepository(baseUrl);
-  final commentRepository = CommentRepository(baseUrl: baseUrl);
-
-  // Enregistrez le ProjectViewModel avec le repository
-  Get.put(ProjectViewModel(projectRepository: projectRepository));
-  Get.put(CommentViewModel(commentRepository: commentRepository));
-  Get.put(AlertRepository(baseUrl)); // Register AlertRepository
-  Get.put(AlertViewModel(Get.find())); // Register AlertViewModel
 }
 
 class MyApp extends StatelessWidget {
@@ -35,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: SafeArea(child: SplashScreen()),
     );
   }
 }

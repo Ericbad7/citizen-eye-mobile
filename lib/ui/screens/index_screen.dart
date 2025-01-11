@@ -40,7 +40,7 @@ class _IndexScreenState extends State<IndexScreen> {
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.peopleRobbery),
+            icon: Icon(FontAwesomeIcons.newspaper),
             label: 'Pétitions',
           ),
           BottomNavigationBarItem(

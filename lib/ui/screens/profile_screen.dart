@@ -1,17 +1,14 @@
-import 'dart:convert';
+import 'package:citizeneye/data/datasources/user_local_storage.dart';
 import 'package:citizeneye/data/models/user_profile_model.dart';
-
+import 'package:citizeneye/logic/controllers/profile_view_controller.dart';
 import 'package:citizeneye/ui/components/profil_header_component.dart';
 import 'package:citizeneye/ui/screens/auth_screen.dart';
+import 'package:citizeneye/widgets/button_widget.dart';
 import 'package:citizeneye/widgets/loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../data/datasources/string_api.dart';
-import '../../data/datasources/user_local_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,83 +18,104 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Future<UserProfile> futureUserProfile;
+  late final ProfileViewController profileViewController;
 
   @override
   void initState() {
     super.initState();
-    futureUserProfile =
-        _fetchUserProfile(); // Appeler la méthode lors de l'initialisation
-  }
-
-  Future<UserProfile> _fetchUserProfile() async {
-    final String? userId = await UserLocalStorage.getId();
-
-    // Afficher la valeur de userId dans la console
-
-    final response = await http.get(Uri.parse("$baseUrl/users/$userId"));
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return UserProfile.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load user profile');
-    }
+    profileViewController = Get.put(
+      ProfileViewController(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue[800],
-        actions: [
-          IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.rightFromBracket, // Icône de déconnexion
-              color: Colors.white,
-            ),
-            onPressed: () {
-              // Logique pour déconnexion
-              _logout(); // Appelez votre méthode de déconnexion ici
-            },
-          )
-        ],
-      ),
-      body: FutureBuilder<UserProfile>(
-        future: futureUserProfile,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: LoadingScreen());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            UserProfile userProfile = snapshot.data!;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  ProfileHeader(userProfile: userProfile),
-                  const SizedBox(height: 10),
-                  _buildStatsCards(),
-                  const SizedBox(height: 10),
-                  _buildInterestsSection(),
-                  const SizedBox(height: 10),
-                  _buildBioSection(userProfile),
-                  const SizedBox(height: 10),
-                  _buildMediaGrid(),
-                  const SizedBox(height: 10),
-                  _buildFavoriteQuotes(),
-                ],
+    return Obx(() {
+      if (profileViewController.isLoading.value) {
+        return const Center(child: LoadingScreen());
+      }
+
+      if (profileViewController.errorMessage.value.isNotEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                profileViewController.errorMessage.value,
+                style: const TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
               ),
-            );
-          } else {
-            return const Center(child: Text('No data available'));
-          }
-        },
-      ),
-    );
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: profileViewController.fetchProfile,
+                child: const Text('Rafraichir'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      if (profileViewController.profile == null) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Vous n'avez pas encore lancé de pétitions.",
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              ButtonWidget(
+                paddingVertical: 10,
+                label: 'Consulter d\'autres',
+                onPressed: profileViewController.fetchProfile,
+              ),
+            ],
+          ),
+        );
+      }
+
+      return RefreshIndicator(
+        onRefresh: profileViewController.fetchProfile,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Profile',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.blue[800],
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  FontAwesomeIcons.rightFromBracket,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _logout();
+                },
+              )
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                ProfileHeader(userProfile: profileViewController.profile.value),
+                const SizedBox(height: 10),
+                _buildStatsCards(),
+                const SizedBox(height: 10),
+                _buildInterestsSection(),
+                const SizedBox(height: 10),
+                _buildBioSection(profileViewController.profile.value),
+                const SizedBox(height: 10),
+                _buildMediaGrid(),
+                const SizedBox(height: 10),
+                _buildFavoriteQuotes(),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   // Widget for Stats Cards
@@ -262,10 +280,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _logout() async {
-    await UserLocalStorage.clearAll(); // Effacez toutes les données stockées
+    await UserLocalStorage.clearAll();
     final prefs = await SharedPreferences.getInstance();
-    await prefs
-        .remove('userId'); // Effacer l'ID utilisateur des SharedPreferences
-    Get.offAll(() => const AuthScreen()); // Redirigez vers l'écran de connexion
+    await prefs.remove('userId');
+    Get.offAll(() => const AuthScreen());
   }
 }

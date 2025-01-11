@@ -1,4 +1,5 @@
 import 'package:citizeneye/data/models/comment_model.dart';
+import 'package:citizeneye/data/models/petition_model.dart';
 import 'package:citizeneye/data/models/reaction_model.dart';
 
 class ProjectModel {
@@ -17,7 +18,7 @@ class ProjectModel {
   final List<dynamic> funds;
   final List<Comment> comments;
   final List<ReactionModel> reactions;
-  final List<dynamic> petitions;
+  final List<PetitionModel> petitions;
   final DateTime createdAt;
 
   ProjectModel({
@@ -129,8 +130,8 @@ class ProjectModel {
       id: json['id'] as int,
       title: json['title'] as String,
       description: json['description'] as String,
-      imageUrl: json['image'] != null && (json['image'] as List).isNotEmpty
-          ? (json['image'][0]['path'] as String)
+      imageUrl: json['image'] != null && json['image']['path'] != null
+          ? (json['image']['path'] as String)
           : null,
       goal: json['objective'] as String,
       beneficiaryZone: json['zone'] as String,
@@ -147,7 +148,9 @@ class ProjectModel {
       reactions: (json['reactions'] as List<dynamic>? ?? [])
           .map((reaction) => ReactionModel.fromJson(reaction))
           .toList(),
-      petitions: json['petitions'] ?? [],
+      petitions: (json['petitions'] as List<dynamic>? ?? [])
+          .map((petition) => PetitionModel.fromJson(petition))
+          .toList(),
       createdAt: DateTime.parse(json['created_at']),
     );
   }
