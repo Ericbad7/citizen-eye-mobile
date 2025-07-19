@@ -13,52 +13,56 @@ class ProjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (viewModel.isLoading.value) {
-        return const Center(child: LoadingScreen());
+        return const SliverFillRemaining(
+          child: Center(child: LoadingScreen()),
+        );
       }
 
       if (viewModel.errorMessage.value.isNotEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                viewModel.errorMessage.value,
-                style: const TextStyle(color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => viewModel.fetchProjects(),
-                child: const Text('Rafraichir'),
-              ),
-            ],
+        return SliverFillRemaining(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  viewModel.errorMessage.value,
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => viewModel.fetchProjects(),
+                  child: const Text('Rafraichir'),
+                ),
+              ],
+            ),
           ),
         );
       }
 
-      if (viewModel.projects.isEmpty) {
-        return const Center(
-          child: Text(
-            "Aucun projet en vue.",
-            style: TextStyle(fontSize: 16),
+      if (viewModel.filteredProjects.isEmpty) {
+        return SliverFillRemaining(
+          child: Center(
+            child: Text(
+              "Aucun projet disponible",
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
           ),
         );
       }
 
-      return RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: ListView.builder(
-          itemCount: viewModel.projects.length,
-          itemBuilder: (context, index) {
-            final project = viewModel.projects.reversed.toList()[index];
-            return ProjectCard(project: project);
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final project = viewModel.filteredProjects[index];
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: ProjectCard(project: project),
+            );
           },
+          childCount: viewModel.filteredProjects.length,
         ),
       );
     });
-  }
-
-  Future<void> _onRefresh() async {
-    await viewModel.fetchProjects();
   }
 }

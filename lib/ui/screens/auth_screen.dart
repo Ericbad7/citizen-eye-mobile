@@ -8,6 +8,7 @@ import 'package:citizeneye/widgets/loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:password_strength_indicator_plus/password_strength_indicator_plus.dart' as psi;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -26,6 +27,15 @@ class _AuthScreenState extends State<AuthScreen> {
       TextEditingController();
   final UserApi _userApi = UserApi();
   bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +100,13 @@ class _AuthScreenState extends State<AuthScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  if (!_isLogin)
+                    const Text(
+                      'Créer un nouveau compte',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  if (!_isLogin)
+                    const SizedBox(height: 20),
                   Form(
                     key: _formKey,
                     child: Column(
@@ -108,6 +125,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               return null;
                             },
                           ),
+                        const SizedBox(height: 10),
                         InputField(
                           label: "Email",
                           hintText: "Entrez votre email",
@@ -125,7 +143,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         InputField(
                           label: "Mot de passe",
                           hintText: "Entrez votre mot de passe",
@@ -133,13 +151,32 @@ class _AuthScreenState extends State<AuthScreen> {
                           isPassword: true,
                           icon: FontAwesomeIcons.lock,
                           validator: (value) {
-                            if (value == null || value.length < 6) {
-                              return "Le mot de passe doit contenir au moins 6 caractères";
+                            if (value == null || value.isEmpty) {
+                              return "Veuillez entrer votre mot de passe";
+                            }
+                            if (value.length < 8) {
+                              return "Le mot de passe doit contenir au moins 8 caractères";
+                            }
+                            if (!value.contains(RegExp(r'[A-Z]'))) {
+                              return "Le mot de passe doit contenir au moins une majuscule";
+                            }
+                            if (!value.contains(RegExp(r'[a-z]'))) {
+                              return "Le mot de passe doit contenir au moins une minuscule";
+                            }
+                            if (!value.contains(RegExp(r'[0-9]'))) {
+                              return "Le mot de passe doit contenir au moins un chiffre";
+                            }
+                            if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                              return "Le mot de passe doit contenir au moins un caractère spécial (!@#\$%^&*(),.?\":{}<>) ";
                             }
                             return null;
                           },
                         ),
-                        const SizedBox(height: 20),
+                        psi.PasswordStrengthIndicatorPlus(
+                          textController: _passwordController,
+                          minLength: 8,
+                        ),
+                        const SizedBox(height: 10),
                         if (!_isLogin)
                           InputField(
                             label: "Confirmer le mot de passe",
@@ -154,7 +191,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               return null;
                             },
                           ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         if (_isLoading) const LoadingScreen(),
                         if (!_isLoading)
                           ButtonWidget(
@@ -162,8 +199,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             label: _isLogin ? "Se connecter" : "S'inscrire",
                             onPressed: _submitAuthForm,
                           ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         const Divider(),
+                        const SizedBox(height: 10),
                         ButtonWidget(
                           label: "Se connecter en tant qu'invité",
                           onPressed: _loginAsGuest,
@@ -197,7 +235,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
           Get.snackbar(
             response["status"] ? 'Succès' : 'Erreur',
-            response["message"],
+            response["message"]?.toString() ?? 'Une erreur est survenue.',
             backgroundColor: response["status"] ? Colors.green : Colors.red,
             colorText: Colors.white,
           );
@@ -214,7 +252,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
           Get.snackbar(
             response["status"] ? 'Succès' : 'Erreur',
-            response["message"],
+            response["message"]?.toString() ?? 'Une erreur est survenue.',
             backgroundColor: response["status"] ? Colors.green : Colors.red,
             colorText: Colors.white,
           );

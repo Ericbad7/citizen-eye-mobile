@@ -25,9 +25,10 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: HomeAppBar(
-        icon: const Icon(Icons.all_inbox_rounded),
-        onSearchPressed: postViewController.fetchPetitions,
+      appBar: AppBar(
+        title: HomeAppBar(),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Column(
         children: [

@@ -50,20 +50,20 @@ class PetitionModel {
   /// Conversion depuis un objet JSON
   factory PetitionModel.fromJson(Map<String, dynamic> json) {
     return PetitionModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
+      id: json['id'] as int? ?? 0,
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
       imageUrl: json['image'] != null && json['image']['path'] != null
-          ? (json['image']['path'] as String)
+          ? (json['image']['path'] as String?)
           : null,
-      owner: UserModel.fromJson(json['owner']),
+      owner: UserModel.fromJson(json['owner'] as Map<String, dynamic>? ?? {}),
       project: json['project'] != null
-          ? ProjectModel.fromJson(json['project'])
+          ? ProjectModel.fromJson(json['project'] as Map<String, dynamic>)
           : null,
-      createdAt: DateTime.parse(json['created_at']),
-      signatures: (json['signatures'] as List<dynamic>? ?? [])
-          .map((signature) => SignatureModel.fromJson(signature))
-          .toList(),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
+      signatures: (json['signatures'] as List<dynamic>?)
+          ?.map((signature) => SignatureModel.fromJson(signature as Map<String, dynamic>))
+          .toList() ?? [],
     );
   }
 }

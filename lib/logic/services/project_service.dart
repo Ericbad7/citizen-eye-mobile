@@ -6,9 +6,21 @@ import 'package:citizeneye/data/datasources/user_local_storage.dart';
 import 'package:citizeneye/data/models/project_model.dart';
 import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> getProjects() async {
+Future<Map<String, dynamic>> getProjects({Map<String, dynamic>? filters}) async {
   try {
-    final response = await http.get(Uri.parse("$baseUrl/projects"));
+    final token = await UserLocalStorage.getToken();
+    Uri uri = Uri.parse("$baseUrl/projects");
+
+    if (filters != null && filters.isNotEmpty) {
+      uri = uri.replace(queryParameters: filters.map((key, value) => MapEntry(key, value.toString())));
+    }
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final List<dynamic> projectList = data['projects'];

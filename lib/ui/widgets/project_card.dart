@@ -6,7 +6,6 @@ import 'package:citizeneye/logic/services/project_service.dart';
 import 'package:citizeneye/ui/screens/auth_screen.dart';
 import 'package:citizeneye/ui/screens/comment_screen.dart';
 import 'package:citizeneye/ui/screens/petition_view.dart';
-import 'package:citizeneye/ui/widgets/badge_widget.dart';
 import 'package:citizeneye/utils/helpers/date_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,7 +21,6 @@ class ProjectCard extends StatefulWidget {
 }
 
 class _ProjectCardState extends State<ProjectCard> {
-  bool isProcessing = false;
   String? _id;
   ProjectModel? _projectModel;
 
@@ -33,25 +31,16 @@ class _ProjectCardState extends State<ProjectCard> {
     initProject();
   }
 
-  initProject() {
-    _projectModel = widget.project;
-  }
+  initProject() => _projectModel = widget.project;
 
   initId() async {
     final id = await UserLocalStorage.getId();
-    if (id != null) {
-      setState(() {
-        _id = id;
-      });
-    }
+    if (id != null) setState(() => _id = id);
   }
 
   void _react(String reactionType) async {
     if (_id == null) {
-      Get.snackbar(
-        'Info',
-        'Connectez-vous pour réagir à ce post',
-      );
+      Get.snackbar('Info', 'Connectez-vous pour réagir à ce post');
       Get.to(() => const AuthScreen());
       return;
     }
@@ -76,252 +65,284 @@ class _ProjectCardState extends State<ProjectCard> {
     }
   }
 
-  void _openBottomSheet(BuildContext context, ProjectModel project) {
+  void _openComments(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.85,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: CommentsScreen(project: _projectModel!),
       ),
-      builder: (context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.85,
-          child: CommentsScreen(project: project),
-        );
-      },
     );
-  }
-
-  Color _getTimeColor(DateTime endDate) {
-    final remainingDays = endDate.difference(DateTime.now()).inDays;
-    if (remainingDays > 50) {
-      return Colors.green;
-    } else if (remainingDays > 20) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 10),
-            _buildImage(height: 250),
-            const SizedBox(height: 10),
-            Text(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
               _projectModel!.title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            const SizedBox(height: 6),
-            Text(
+          ),
+          const SizedBox(height: 8),
+          _buildImage(),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
               _projectModel!.description,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+                height: 1.4,
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: _buildBadges()),
-                _buildCircularProgress(size: 70),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Divider(color: Colors.grey[300]),
-            _buildActions(),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildProjectInfo(),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, thickness: 1),
+          _buildActionBar(),
+        ],
       ),
     );
   }
 
   Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(
+              _projectModel!.imageUrl != null &&
+                      _projectModel!.imageUrl!.isNotEmpty
+                  ? '$imagePath/${_projectModel!.imageUrl!}'
+                  : 'https://via.placeholder.com/150',
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _projectModel!.owner.toUpperCase(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  "Publié ${formatDate(_projectModel!.createdAt)}",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert, color: Colors.grey[600]),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return GestureDetector(
+      onTap: () => Get.to(PetitionView(project: _projectModel!)),
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          image: DecorationImage(
+            image: NetworkImage(
+              _projectModel!.imageUrl != null &&
+                      _projectModel!.imageUrl!.isNotEmpty
+                  ? '$imagePath/${_projectModel!.imageUrl!}'
+                  : 'https://via.placeholder.com/400x250',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child:
+            _projectModel!.imageUrl == null || _projectModel!.imageUrl!.isEmpty
+                ? const Center(
+                    child: Icon(Icons.image, size: 50, color: Colors.grey))
+                : null,
+      ),
+    );
+  }
+
+  Widget _buildProjectInfo() {
+    final duration = _projectModel!.calculateProjectDuration();
     return Row(
       children: [
-        Expanded(
-          child: ListTile(
-            leading: CircleAvatar(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Image.network(
-                  '$imagePath/${_projectModel!.imageUrl!}',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported),
-                    );
-                  },
+        _buildInfoChip(
+          icon: Icons.attach_money,
+          text: '${_projectModel!.budget}',
+          color: Colors.blue,
+        ),
+        const SizedBox(width: 8),
+        _buildInfoChip(
+          icon: Icons.timer,
+          text: '${duration['daysRemaining']}j restants',
+          color: _getTimeColor(_projectModel!.endDate),
+        ),
+        const Spacer(),
+        Text(
+          '${duration['percentagePassed'].toInt()}% complété',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoChip(
+      {required IconData icon, required String text, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildActionButton(
+            icon: FontAwesomeIcons.thumbsUp,
+            label: 'J\'aime',
+            isActive: _projectModel!.hasReaction(_id ?? '') &&
+                _projectModel!.getReactionType(_id ?? '') == 'liked',
+            count: _projectModel!.getLikeCount(),
+            onTap: () => _react('liked'),
+          ),
+          _buildActionButton(
+            icon: FontAwesomeIcons.thumbsDown,
+            label: 'Je n\'aime pas',
+            isActive: _projectModel!.hasReaction(_id ?? '') &&
+                _projectModel!.getReactionType(_id ?? '') == 'disliked',
+            count: _projectModel!.getDislikeCount(),
+            onTap: () => _react('disliked'),
+          ),
+          _buildActionButton(
+            icon: FontAwesomeIcons.comment,
+            label: 'Commenter',
+            count: _projectModel!.getCommentCount(),
+            onTap: () => _openComments(context),
+          ),
+          _buildActionButton(
+            icon: FontAwesomeIcons.penToSquare,
+            label: 'Pétition',
+            count: _projectModel!.petitions.length,
+            onTap: () => Get.to(PetitionView(project: _projectModel!)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Function() onTap,
+    int count = 0,
+    bool isActive = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon,
+                  size: 18, color: isActive ? Colors.blue : Colors.grey[600]),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isActive ? Colors.blue : Colors.grey[600],
+                  fontSize: 12,
                 ),
               ),
-            ),
-            title: Text(
-              _projectModel!.owner.toUpperCase(),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              "Publié ${formatDate(_projectModel!.createdAt)}",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
+              if (count > 0)
+                Text(
+                  count.toString(),
+                  style: TextStyle(
+                    color: isActive ? Colors.blue : Colors.grey[600],
+                    fontSize: 11,
+                  ),
+                ),
+            ],
           ),
         ),
-        IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.solidBell,
-            color: Colors.blueGrey,
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImage({double height = 150}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        '$imagePath/${_projectModel!.imageUrl!}',
-        height: height,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            height: height,
-            color: Colors.grey[300],
-            child: const Center(child: Text('Image non disponible')),
-          );
-        },
       ),
     );
   }
 
-  Widget _buildActions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            IconButton(
-              icon: Icon(
-                FontAwesomeIcons.solidHeart,
-                color: (_projectModel!.hasReaction(_id ?? '') &&
-                        _projectModel!.getReactionType(_id ?? '') == 'liked')
-                    ? Colors.blue
-                    : Colors.grey,
-              ),
-              onPressed: () {
-                _react('liked');
-              },
-            ),
-            Text('${_projectModel!.getLikeCount()}'),
-            const SizedBox(width: 16),
-            IconButton(
-              icon: Icon(
-                FontAwesomeIcons.heartCrack,
-                color: (_projectModel!.hasReaction(_id ?? '') &&
-                        _projectModel!.getReactionType(_id ?? '') == 'disliked')
-                    ? Colors.blue
-                    : Colors.grey,
-              ),
-              onPressed: () {
-                _react('disliked');
-              },
-            ),
-            Text('${_projectModel!.getDislikeCount()}'),
-            const SizedBox(width: 16),
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.solidCommentDots,
-                color: Colors.blueGrey,
-              ),
-              onPressed: () {
-                _openBottomSheet(context, _projectModel!);
-              },
-            ),
-            Text('${_projectModel!.getCommentCount()}'),
-          ],
-        ),
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(
-                FontAwesomeIcons.newspaper,
-                color: Colors.red,
-              ),
-              onPressed: () {
-                Get.to(PetitionView(
-                  project: _projectModel!,
-                ));
-              },
-            ),
-            Text('${_projectModel!.petitions.length}'),
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _buildBadges() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10.0,
-      ),
-      child: BadgeWidget(
-        text: '${_projectModel!.budget}',
-        color: Colors.blueGrey.shade300,
-      ),
-    );
-  }
-
-  Widget _buildCircularProgress({double size = 80}) {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              height: size,
-              width: size,
-              child: CircularProgressIndicator(
-                value: _projectModel!
-                        .calculateProjectDuration()['percentagePassed'] /
-                    100,
-                strokeWidth: 6,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    _getTimeColor(_projectModel!.endDate)),
-                backgroundColor: Colors.grey[300],
-              ),
-            ),
-            Text(
-              '${(_projectModel!.calculateProjectDuration()['percentagePassed']).toInt()}%',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '${_projectModel!.calculateProjectDuration()['daysRemaining']} j restants',
-          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-        ),
-      ],
-    );
+  Color _getTimeColor(DateTime endDate) {
+    final remainingDays = endDate.difference(DateTime.now()).inDays;
+    if (remainingDays > 50) return Colors.green;
+    if (remainingDays > 20) return Colors.orange;
+    return Colors.red;
   }
 }

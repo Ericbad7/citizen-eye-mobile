@@ -19,10 +19,15 @@ class ProfileHeader extends StatelessWidget {
             Container(
               height: 200,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(userProfile.profileImageUrl),
-                  fit: BoxFit.cover,
-                ),
+                image: userProfile.coverImageUrl.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(userProfile.coverImageUrl),
+                        fit: BoxFit.cover,
+                      )
+                    : const DecorationImage(
+                        image: AssetImage('assets/images/default_cover.png'),
+                        fit: BoxFit.cover,
+                      ),
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(12), // Smoother rounded corners
                 ),
@@ -52,7 +57,9 @@ class ProfileHeader extends StatelessWidget {
               left: 16,
               child: CircleAvatar(
                 radius: 70,
-                backgroundImage: NetworkImage(userProfile.profileImageUrl),
+                backgroundImage: userProfile.profileImageUrl.isNotEmpty
+                    ? NetworkImage(userProfile.profileImageUrl)
+                    : const AssetImage('assets/images/default_profile.png') as ImageProvider,
                 backgroundColor: Colors.grey[300], // Fallback color
                 // Optional: Add a border to the profile image
                 child: ClipOval(
@@ -61,6 +68,12 @@ class ProfileHeader extends StatelessWidget {
                     fit: BoxFit.cover,
                     width: 90,
                     height: 90,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.person, size: 40),
+                      );
+                    },
                   ),
                 ),
               ),

@@ -6,14 +6,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
-class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
-  @override
-  (int, int)? get data => (2, 3);
-
-  @override
-  String get name => '2x3';
-}
-
 Future<List<String>> convertFilesToBytes(List<File> files) async {
   List<String> bytesList = [];
   for (var file in files) {

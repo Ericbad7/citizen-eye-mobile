@@ -154,7 +154,7 @@ class _PetitionCardState extends State<PetitionCard> {
                   );
                 },
                 child: Text(
-                  widget.petition.project!.title,
+                  widget.petition.project?.title ?? 'Titre du projet inconnu',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -257,17 +257,31 @@ class _PetitionCardState extends State<PetitionCard> {
   }
 
   Widget _buildImage({double height = 150}) {
+    if (widget.petition.imageUrl == null) {
+      return Container(
+        height: height,
+        width: double.infinity,
+        color: Colors.grey[300],
+        child: const Icon(Icons.image_not_supported, size: 50),
+      );
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(0),
       child: Image.network(
-        '$imagePath/${widget.petition.imageUrl!}',
+        '$imagePath/${widget.petition.imageUrl}',
         height: height,
         width: double.infinity,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: Colors.grey[300],
-            child: const Icon(Icons.image_not_supported),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.image_not_supported, size: 50),
+                Text('Image non disponible', style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           );
         },
       ),
@@ -282,16 +296,21 @@ class _PetitionCardState extends State<PetitionCard> {
             leading: CircleAvatar(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: Image.network(
-                  '$imagePath/${widget.petition.imageUrl!}',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported),
-                    );
-                  },
-                ),
+                child: widget.petition.imageUrl != null
+                    ? Image.network(
+                        '$imagePath/${widget.petition.imageUrl}',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.person, size: 40),
+                          );
+                        },
+                      )
+                    : Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.person, size: 40),
+                      ),
               ),
             ),
             title: Text(
@@ -317,16 +336,24 @@ class _PetitionCardState extends State<PetitionCard> {
             onSelected: (String value) {
               switch (value) {
                 case '2':
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PostPetitionScreen(
-                        id: widget.petition.project!.id,
-                        petition: widget.petition,
+                  if (widget.petition.project != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostPetitionScreen(
+                          id: widget.petition.project!.id,
+                          petition: widget.petition,
+                        ),
                       ),
-                    ),
-                  );
-
+                    );
+                  } else {
+                    Get.snackbar(
+                      'Erreur',
+                      'Impossible de modifier la pétition sans projet associé.',
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  }
                   break;
                 case '1':
                   _showConfirmationDialog();

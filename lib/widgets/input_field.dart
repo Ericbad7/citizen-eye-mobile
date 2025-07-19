@@ -11,6 +11,7 @@ class InputField extends StatelessWidget {
   final bool enabled;
   final int maxLines;
   final TextInputAction textInputAction;
+  final String? helperText;
 
   const InputField({
     super.key,
@@ -24,6 +25,7 @@ class InputField extends StatelessWidget {
     this.enabled = true,
     this.maxLines = 1,
     this.textInputAction = TextInputAction.done,
+    this.helperText,
   });
 
   @override
@@ -41,7 +43,9 @@ class InputField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           hintText: hintText,
-          prefixIcon: icon != null
+          helperText: helperText,
+          prefixIcon: icon !=
+              null
               ? Icon(
                   icon,
                   color: Colors.blue[800],

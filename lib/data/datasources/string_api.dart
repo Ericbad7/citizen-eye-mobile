@@ -1,4 +1,4 @@
-const String base = "https://oddly-sweet-penguin.ngrok-free.app";
+const String base = "http://192.168.1.181:8000";
 const String baseUrl = "$base/api";
 const String registerUrl = "$baseUrl/register";
 const String loginUrl = "$baseUrl/login";

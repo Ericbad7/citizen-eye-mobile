@@ -11,13 +11,9 @@ class ReactionModel {
 
   factory ReactionModel.fromJson(Map<String, dynamic> json) {
     return ReactionModel(
-      emojiType: json['emoji_type'] as String,
-      userId: json['user_id'].toString(),
-      activated: json['activated'] == 1
-          ? true
-          : json['activated'] == true
-              ? true
-              : false,
+      emojiType: json['emoji_type'] as String? ?? '',
+      userId: json['user_id']?.toString() ?? '',
+      activated: (json['activated'] == 1 || json['activated'] == true) ?? false,
     );
   }
 }

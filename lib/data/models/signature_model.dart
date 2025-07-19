@@ -15,10 +15,10 @@ class SignatureModel {
 
   factory SignatureModel.fromJson(Map<String, dynamic> json) {
     return SignatureModel(
-      id: json['id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      user: UserModel.fromJson(json['user']),
+      id: json['id'] as int? ?? 0,
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? '') ?? DateTime.now(),
+      user: UserModel.fromJson(json['user'] as Map<String, dynamic>? ?? {}),
     );
   }
 }

@@ -127,31 +127,31 @@ class ProjectModel {
   /// Conversion depuis un objet JSON
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
     return ProjectModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
+      id: json['id'] as int? ?? 0, // Provide a default value if null
+      title: json['title'] as String? ?? '', // Provide a default value if null
+      description: json['description'] as String? ?? '', // Provide a default value if null
       imageUrl: json['image'] != null && json['image']['path'] != null
-          ? (json['image']['path'] as String)
+          ? (json['image']['path'] as String?)
           : null,
-      goal: json['objective'] as String,
-      beneficiaryZone: json['zone'] as String,
-      startDate: DateTime.parse(json['start_date']),
-      endDate: DateTime.parse(json['end_date']),
-      budget: double.tryParse(json['budget'].toString()) ?? 0.0,
-      owner: json['owner'] as String,
-      contractor: json['contractor'] as String,
-      status: json['status'] as String,
-      funds: json['funds'] ?? [],
-      comments: (json['comments'] as List<dynamic>? ?? [])
-          .map((comment) => Comment.fromJson(comment))
-          .toList(),
-      reactions: (json['reactions'] as List<dynamic>? ?? [])
-          .map((reaction) => ReactionModel.fromJson(reaction))
-          .toList(),
-      petitions: (json['petitions'] as List<dynamic>? ?? [])
-          .map((petition) => PetitionModel.fromJson(petition))
-          .toList(),
-      createdAt: DateTime.parse(json['created_at']),
+      goal: json['objective'] as String? ?? '', // Provide a default value if null
+      beneficiaryZone: json['zone'] as String? ?? '', // Provide a default value if null
+      startDate: DateTime.tryParse(json['start_date'] as String? ?? '') ?? DateTime.now(), // Handle null or invalid date
+      endDate: DateTime.tryParse(json['end_date'] as String? ?? '') ?? DateTime.now(), // Handle null or invalid date
+      budget: double.tryParse(json['budget']?.toString() ?? '') ?? 0.0, // Handle null or invalid budget
+      owner: json['owner'] as String? ?? '', // Provide a default value if null
+      contractor: json['contractor'] as String? ?? '', // Provide a default value if null
+      status: json['status'] as String? ?? '', // Provide a default value if null
+      funds: (json['funds'] as List<dynamic>?) ?? [], // Ensure funds is a list or empty
+      comments: (json['comments'] as List<dynamic>?)
+          ?.map((comment) => Comment.fromJson(comment as Map<String, dynamic>))
+          .toList() ?? [], // Handle null comments list and individual comments
+      reactions: (json['reactions'] as List<dynamic>?)
+          ?.map((reaction) => ReactionModel.fromJson(reaction as Map<String, dynamic>))
+          .toList() ?? [], // Handle null reactions list and individual reactions
+      petitions: (json['petitions'] as List<dynamic>?)
+          ?.map((petition) => PetitionModel.fromJson(petition as Map<String, dynamic>))
+          .toList() ?? [], // Handle null petitions list and individual petitions
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(), // Handle null or invalid date
     );
   }
 

@@ -112,6 +112,20 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   Widget _buildImage({double height = 150}) {
+    if (project.imageUrl == null || project.imageUrl!.isEmpty) {
+      return Container(
+        height: height,
+        width: double.infinity,
+        color: Colors.grey[300],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.image_not_supported, size: 50),
+            Text('Image non disponible', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(0),
       child: Image.network(
@@ -122,7 +136,13 @@ class ProjectDetailScreen extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: Colors.grey[300],
-            child: const Icon(Icons.image_not_supported),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.image_not_supported, size: 50),
+                Text('Image non disponible', style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           );
         },
       ),

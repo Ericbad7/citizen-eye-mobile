@@ -24,14 +24,14 @@ class Comment {
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: json['id'],
-      content: json['content'],
-      media: json['image'],
-      mediaType: json['video'],
-      projectId: int.parse(json['related_id'].toString()),
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      user: UserModel.fromJson(json['user']),
+      id: json['id'] as int? ?? 0,
+      content: json['content'] as String? ?? '',
+      media: json['image'] as String?,
+      mediaType: json['video'] as String?,
+      projectId: int.tryParse(json['related_id']?.toString() ?? '') ?? 0,
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? '') ?? DateTime.now(),
+      user: UserModel.fromJson(json['user'] as Map<String, dynamic>? ?? {}), // Provide empty map if user is null
     );
   }
 }

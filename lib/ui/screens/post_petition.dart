@@ -183,6 +183,18 @@ class _PostPetitionScreenState extends State<PostPetitionScreen> {
                         '$imagePath/${widget.petition!.imageUrl!}',
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.image_not_supported, size: 50),
+                                Text('Image non disponible', style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
